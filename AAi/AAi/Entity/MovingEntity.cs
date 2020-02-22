@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using AAI.Statics;
+using AAI.world;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace entity
@@ -12,7 +15,7 @@ namespace entity
 
         public SteeringBehaviour SB { get; set; }
 
-        public MovingEntity(Vector2 pos, World.World w , Texture2D texture) : base(pos, w, texture)
+        public MovingEntity(Vector2 pos, World w , Texture2D texture) : base(pos, w, texture)
         {
             Mass     = 30;
             MaxSpeed = 100;
@@ -23,14 +26,13 @@ namespace entity
         public override void Update(GameTime timeElapsed)
         {
             var steeringforce = SB.Calculate();
-            var acceleration = Vector2.Divide(steeringforce, Mass);
-            Velocity = Vector2.Add(Velocity, Vector2.Multiply(acceleration, timeElapsed.TotalGameTime.Milliseconds));
+            Velocity += steeringforce;
             if (Velocity.Length() > MaxSpeed)
             {
                 Velocity.Normalize();
-                Velocity = Vector2.Multiply(Velocity , MaxSpeed);
+                Velocity *= MaxSpeed;
             }
-            this.Pos = Vector2.Add(this.Pos,(Vector2.Multiply(Velocity,timeElapsed.TotalGameTime.Milliseconds)));
+            this.Pos += Velocity;
         }
 
         public override string ToString()

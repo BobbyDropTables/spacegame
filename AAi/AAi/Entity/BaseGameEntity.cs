@@ -1,15 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AAI.world;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 internal abstract class BaseGameEntity
 {
     public           Vector2     Pos     { get; set; }
     public           float       Scale   { get; set; }
-    public           World.World MyWorld { get; set; }
+    public           World MyWorld { get; set; }
     private readonly Texture2D   texture;
 
 
-    public BaseGameEntity(Vector2 pos, World.World w, Texture2D texture)
+    public BaseGameEntity(Vector2 pos, World w, Texture2D texture)
     {
         Pos          = pos;
         MyWorld      = w;

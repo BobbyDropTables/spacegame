@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AAI.world;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SteeringCS;
@@ -8,16 +9,16 @@ namespace AAI
     /// <summary>
     ///     This is the main type for your game.
     /// </summary>
-    public class Game1 : Game
+    public class Game : Microsoft.Xna.Framework.Game
     {
         private          Texture2D             dobberTexture2D;
         private          Texture2D             fishTexture2D;
         private readonly GraphicsDeviceManager graphics;
         private          Texture2D             pondTexture2D;
         private          SpriteBatch           spriteBatch;
-        private          World.World                 world;
+        private          World                world;
 
-        public Game1()
+        public Game()
         {
             graphics              = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -34,7 +35,8 @@ namespace AAI
             fishTexture2D   = Content.Load<Texture2D>("fish");
             dobberTexture2D = Content.Load<Texture2D>("dobber");
             // TODO: Add your initialization logic here
-            world = new World.World(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight, fishTexture2D, dobberTexture2D);
+            world = new World(1366, 768, fishTexture2D, dobberTexture2D);
+            Statics.Globals.World = world;
             base.Initialize();
         }
 
@@ -87,7 +89,6 @@ namespace AAI
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(pondTexture2D, new Vector2(0, 0), new Rectangle(0, 0, graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight),Color.Aqua);
             world.draw(spriteBatch);
             spriteBatch.End();
 

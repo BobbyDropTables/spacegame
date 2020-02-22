@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SteeringCS.behaviour;
 
-namespace World
+namespace AAI.world
 {
     internal class World
     {
