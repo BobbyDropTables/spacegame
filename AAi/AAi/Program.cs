@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AAi
+namespace AAI
 {
 #if WINDOWS || LINUX
     /// <summary>
