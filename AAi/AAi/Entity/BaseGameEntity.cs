@@ -1,29 +1,43 @@
-﻿using AAI.world;
+﻿using Game.view;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-internal abstract class BaseGameEntity
+namespace Game.entity
 {
-    public           Vector2     Pos     { get; set; }
-    public           float       Scale   { get; set; }
-    public           World MyWorld { get; set; }
-    private readonly Texture2D   texture;
-
-
-    public BaseGameEntity(Vector2 pos, World w, Texture2D texture)
+    public abstract class BaseGameEntity
     {
-        Pos          = pos;
-        MyWorld      = w;
-        this.texture = texture;
-    }
+        public Vector2 Pos { get; set; }
+        public float Scale { get; set; }
+        public World MyWorld { get; set; }
+        public Texture2D Texture;
 
-    public abstract void Update(GameTime delta);
+        protected BaseGameEntity(Vector2 pos, World w)
+        {
+            Pos = pos;
+            MyWorld = w;
+            Scale = 20;
+        }
 
-    public virtual void Draw(SpriteBatch spriteBatch)
-    {
-        var size = (int) Scale * 2;
-        spriteBatch.Draw(texture, new Vector2(0, 0),
-                         new Rectangle(0, 0, size, size),
-                         Color.Aqua);
+        public virtual void Update()
+        {
+        }
+
+        public virtual void Render(SpriteBatch spriteBatch)
+        {
+
+            Texture = TextureStorage.Textures["Target"];
+            spriteBatch.Draw(Texture,
+                             new Rectangle((int)Pos.X, (int)Pos.Y, 100, 100),
+                             null,
+                             Color.White);
+        }
+        
+
     }
+    
+
+
+    
+
+    
 }

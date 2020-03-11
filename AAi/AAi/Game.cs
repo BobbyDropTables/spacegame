@@ -1,27 +1,32 @@
-﻿using AAI.world;
+﻿using Game.view;
+using Microsoft.Win32.SafeHandles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SteeringCS;
 
-namespace AAI
+namespace Game
 {
     /// <summary>
     ///     This is the main type for your game.
     /// </summary>
     public class Game : Microsoft.Xna.Framework.Game
     {
-        private          Texture2D             dobberTexture2D;
-        private          Texture2D             fishTexture2D;
-        private readonly GraphicsDeviceManager graphics;
-        private          Texture2D             pondTexture2D;
+        public const     int                   WindowWidth  = 1280;
+        public const     int                   WindowHeight = 960;
+        private readonly GraphicsDeviceManager _graphics;
         private          SpriteBatch           spriteBatch;
-        private          World                world;
+        private          TextureStorage        textureStorage;
+
+        private readonly World world;
 
         public Game()
         {
-            graphics              = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            _graphics                           = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferHeight = WindowHeight;
+            _graphics.PreferredBackBufferWidth  = WindowWidth;
+            Content.RootDirectory               = "Content";
+            IsMouseVisible                      = true;
+            world                               = new World(WindowWidth, WindowHeight);
         }
 
         /// <summary>
@@ -32,11 +37,8 @@ namespace AAI
         /// </summary>
         protected override void Initialize()
         {
-            fishTexture2D   = Content.Load<Texture2D>("fish");
-            dobberTexture2D = Content.Load<Texture2D>("dobber");
-            // TODO: Add your initialization logic here
-            world = new World(1366, 768, fishTexture2D, dobberTexture2D);
-            Statics.Globals.World = world;
+            textureStorage = new TextureStorage(Content);
+
             base.Initialize();
         }
 
@@ -48,10 +50,9 @@ namespace AAI
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            textureStorage.LoadTextures();
 
             // TODO: use this.Content to load your game content here
-            
-            pondTexture2D   = Content.Load<Texture2D>("pond");
         }
 
         /// <summary>
@@ -74,9 +75,12 @@ namespace AAI
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            world.Update(gameTime);
-
-            base.Update(gameTime);
+            // TODO: Add your update logic here
+            if (this.IsActive)
+            {
+                world.Update();
+            }
+            
         }
 
         /// <summary>
@@ -87,11 +91,12 @@ namespace AAI
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            // Clear the screen and add a background color.
             spriteBatch.Begin();
-            world.draw(spriteBatch);
-            spriteBatch.End();
 
+            // Draw all the entities.
+            world.Render(spriteBatch);
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }

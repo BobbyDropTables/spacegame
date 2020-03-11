@@ -1,8 +1,10 @@
 ﻿using System;
-using entity;
+using Game;
+using Game.entity;
+using Game.entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
-namespace SteeringCS.behaviour
+namespace SteeGameringCS.behaviour
 {
     internal class ArriveBehaviour : SteeringBehaviour
     {
@@ -12,18 +14,16 @@ namespace SteeringCS.behaviour
 
         public override Vector2 Calculate()
         {
-            Vector2 target = new Vector2(ME.MyWorld.Target.Pos.X, ME.MyWorld.Target.Pos.Y);
-            var toTarget = target - ME.Pos;
+
+            var toTarget = ME.MyWorld.Target.Pos - ME.Pos;
             //calculate the distance to the target position
             var dist = toTarget.Length();
-            Console.WriteLine(dist);
-            if (dist > 0)
+            if (dist > 1)
             {
-                var speed = dist / 2;
+                var speed = dist / 50;
                 speed = Math.Min(speed, ME.MaxSpeed);
-                var desiredVelocity = toTarget *speed /dist;
-
-                return desiredVelocity - ME.Velocity;
+                var desiredVelocity = (toTarget * speed) / dist;
+                return desiredVelocity- ME.Velocity;
             }
 
             return new Vector2(0, 0);

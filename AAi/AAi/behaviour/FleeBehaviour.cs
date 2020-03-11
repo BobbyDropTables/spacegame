@@ -1,10 +1,15 @@
 ﻿using System;
-using entity;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Game.entity;
+using Game.entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
-namespace SteeringCS.behaviour
+namespace Game.behaviour
 {
-    internal class FleeBehaviour : SteeringBehaviour
+    class FleeBehaviour : SteeringBehaviour
     {
         public FleeBehaviour(MovingEntity me) : base(me)
         {
@@ -12,14 +17,15 @@ namespace SteeringCS.behaviour
 
         public override Vector2 Calculate()
         {
-            //var tempPos      = ME.Pos.Clone();
-            //var target          = ME.MyWorld.Target.Pos.Clone();
-            //var DesiredVelocity = tempPos.Sub(target);
-            //DesiredVelocity.Normalize();
-            //DesiredVelocity.Multiply(ME.MaxSpeed);
-            //Console.WriteLine(ME.Pos.Distance(target));
-            //return ME.Pos.Distance(target) <= 2 ? new Vector2D(0, 0) : DesiredVelocity.Sub(ME.Velocity);
-            throw new NotImplementedException();
+            var tempPos      = ME.Pos;
+            var target          = ME.MyWorld.Target.Pos;
+            var DesiredVelocity = tempPos- target;
+            DesiredVelocity.Normalize();
+            DesiredVelocity *= ME.MaxSpeed;
+            Console.WriteLine(Vector2.Distance(ME.Pos, target));
+            return Vector2.Distance(ME.Pos,target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
         }
     }
 }
+
+

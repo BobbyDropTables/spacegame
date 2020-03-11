@@ -1,10 +1,6 @@
-﻿using System;
-using AAI.Statics;
-using AAI.world;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
-namespace entity
+namespace Game.entity.MovingEntities
 {
     internal abstract class MovingEntity : BaseGameEntity
     {
@@ -15,18 +11,19 @@ namespace entity
 
         public SteeringBehaviour SB { get; set; }
 
-        public MovingEntity(Vector2 pos, World w , Texture2D texture) : base(pos, w, texture)
+        public MovingEntity(Vector2 pos, World w) : base(pos, w)
         {
-            Mass     = 30;
-            MaxSpeed = 100;
-            Maxturn  = 30;
+            Mass     = 4f;
+            MaxSpeed = 10;
+            Maxturn  = 2;
             Velocity = new Vector2();
         }
 
-        public override void Update(GameTime timeElapsed)
+        public override void Update()
         {
             var steeringforce = SB.Calculate();
-            Velocity += steeringforce;
+            var acceleration = steeringforce/Mass;
+            Velocity += (acceleration);
             if (Velocity.Length() > MaxSpeed)
             {
                 Velocity.Normalize();

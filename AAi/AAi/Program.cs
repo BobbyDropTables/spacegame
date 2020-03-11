@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AAI
+namespace Game
 {
 #if WINDOWS || LINUX
     /// <summary>
