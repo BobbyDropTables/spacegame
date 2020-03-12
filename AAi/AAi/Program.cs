@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Game
+namespace AAI
 {
 #if WINDOWS || LINUX
     /// <summary>
@@ -14,7 +14,7 @@ namespace Game
         [STAThread]
         static void Main()
         {
-            using (var game = new Game())
+            using (var game = new AAI.Game())
                 game.Run();
         }
     }

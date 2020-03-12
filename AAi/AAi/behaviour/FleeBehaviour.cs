@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game.entity;
-using Game.entity.MovingEntities;
+using AAI.Entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
-namespace Game.behaviour
+namespace AAI.behaviour
 {
     class FleeBehaviour : SteeringBehaviour
     {

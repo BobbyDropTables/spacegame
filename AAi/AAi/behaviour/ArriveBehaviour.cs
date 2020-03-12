@@ -1,7 +1,6 @@
 ﻿using System;
-using Game;
-using Game.entity;
-using Game.entity.MovingEntities;
+using AAI.behaviour;
+using AAI.Entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
 namespace SteeGameringCS.behaviour

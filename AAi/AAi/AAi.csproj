@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
+    <Compile Include="behaviour\ObjectAvoidance.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
     <Compile Include="behaviour\SteeringBehaviour.cs" />
     <Compile Include="Entity\BaseGameEntity.cs" />

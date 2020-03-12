@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Game.view;
+﻿using AAI.View;
+using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game.entity.staticEntities
+namespace AAI.Entity.staticEntities
 {
     public class Target : StaticEntity
     {

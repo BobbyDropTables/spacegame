@@ -1,10 +1,10 @@
-﻿using Game.view;
-using Microsoft.Win32.SafeHandles;
+﻿using AAI.View;
+using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Game
+namespace AAI
 {
     /// <summary>
     ///     This is the main type for your game.

@@ -1,8 +1,9 @@
-﻿using Game.view;
+﻿using AAI.View;
+using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Game.entity
+namespace AAI.Entity
 {
     public abstract class BaseGameEntity
     {

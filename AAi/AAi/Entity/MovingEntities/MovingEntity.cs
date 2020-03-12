@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using AAI.behaviour;
+using AAI.world;
+using Microsoft.Xna.Framework;
 
-namespace Game.entity.MovingEntities
+namespace AAI.Entity.MovingEntities
 {
     internal abstract class MovingEntity : BaseGameEntity
     {

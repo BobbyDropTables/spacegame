@@ -1,9 +1,8 @@
 ﻿using System;
-using Game.entity;
-using Game.entity.MovingEntities;
+using AAI.Entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
-namespace Game.behaviour
+namespace AAI.behaviour
 {
     internal class SeekBehaviour : SteeringBehaviour
     {

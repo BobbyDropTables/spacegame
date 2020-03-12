@@ -1,7 +1,7 @@
-﻿using System.Drawing;
+﻿using AAI.world;
 using Microsoft.Xna.Framework;
 
-namespace Game.entity.staticEntities
+namespace AAI.Entity.staticEntities
 {
 	public abstract class StaticEntity : BaseGameEntity
     {
