@@ -1,4 +1,6 @@
-﻿using AAI.View;
+﻿using System.Collections.Generic;
+using AAI.behaviour;
+using AAI.View;
 using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -15,6 +17,11 @@ namespace AAI.Entity.MovingEntities
         {
             Velocity = new Vector2(0, 0);
             target = false;
+            Behaviours = new List<SteeringBehaviour>
+            {
+                new ArriveBehaviour(this),
+                //new ObjectAvoidance(this, 50),
+            };
         }
 
 		public override void Render(SpriteBatch spriteBatch)

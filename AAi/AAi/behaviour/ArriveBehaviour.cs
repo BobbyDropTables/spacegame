@@ -1,9 +1,8 @@
 ﻿using System;
-using AAI.behaviour;
 using AAI.Entity.MovingEntities;
 using Microsoft.Xna.Framework;
 
-namespace SteeGameringCS.behaviour
+namespace AAI.behaviour
 {
     internal class ArriveBehaviour : SteeringBehaviour
     {

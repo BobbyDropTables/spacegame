@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AAI.behaviour;
 using AAI.Entity;
 using AAI.Entity.MovingEntities;
 using AAI.Entity.staticEntities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SteeGameringCS.behaviour;
 
 namespace AAI.world
 {
@@ -14,14 +16,18 @@ namespace AAI.world
         public           Target               Target { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
-        private readonly List<BaseGameEntity> entities  = new List<BaseGameEntity>();
-        private readonly List<BaseGameEntity> walls     = new List<BaseGameEntity>();
+        public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
 
         public World(int w, int h)
         {
             Width  = w;
             Height = h;
             populate();
+        }
+
+        internal object Where(Func<object, bool> p)
+        {
+            throw new NotImplementedException();
         }
 
         private void populate()
@@ -39,7 +45,7 @@ namespace AAI.world
                 new Wall(new Vector2(100,100), this,new Vector2(200,100),20,Color.Purple)
             };
             foreach (Wall wall in Walls)
-                walls.Add(wall);
+                entities.Add(wall);
         }
 
         public void Update()
@@ -47,7 +53,8 @@ namespace AAI.world
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
                 Target.Pos = new Vector2(mouseState.X, mouseState.Y);
-            foreach (MovingEntity me in entities)
+            var melist = entities.Where(entity => entity is MovingEntity).ToList();
+            foreach (MovingEntity me in melist)
             {
                 me.SB = new ArriveBehaviour(me);
                 me.Update();
@@ -56,7 +63,6 @@ namespace AAI.world
 
         public void Render(SpriteBatch spriteBatch)
         {
-            walls.ForEach(e => e.Render(spriteBatch));
             entities.ForEach(e => e.Render(spriteBatch));
             Target.Render(spriteBatch);
         }
