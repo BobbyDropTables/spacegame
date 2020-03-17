@@ -1,5 +1,6 @@
 ﻿using AAI.Entity.MovingEntities;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AAI.behaviour
 {
@@ -13,5 +14,6 @@ namespace AAI.behaviour
         }
 
         public abstract Vector2 Calculate();
+        public abstract void DebugDraw(SpriteBatch spriteBatch, float scale);
     }
 }

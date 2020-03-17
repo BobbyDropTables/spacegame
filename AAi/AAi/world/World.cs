@@ -29,24 +29,27 @@ namespace AAI.world
         private void populate()
         {
             Target = new Target(new Vector2(500, 300), this);
+            for (int i = 0; i < 100; i++)
+            {
+                Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
+                Entities.Add(v);
+            }
+            
 
-            Vehicle v = new Vehicle(new Vector2(300, 300), this);
-            Entities.Add(v);
-            v = new Vehicle(new Vector2(400, 400), this);
-            Entities.Add(v);
-            v = new Vehicle(new Vector2(600, 100), this);
-            Entities.Add(v);
-            v = new Vehicle(new Vector2(1000, 800), this);
-            Entities.Add(v);
-            v = new Vehicle(new Vector2(700, 300), this);
-            Entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
                 new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
                 new Wall(new Vector2(Width, 0), this, new Vector2(Width, Height), 20, Color.Black),
                 new Wall(new Vector2(0, 0), this, new Vector2(0, Height), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-                new Wall(new Vector2(500,300), this,new Vector2(500,600),20,Color.Purple)
+                //new Wall(new Vector2(500,300), this,new Vector2(500,600),20,Color.Purple),
+                //new Wall(new Vector2(800,300), this,new Vector2(800,600),20,Color.Purple),
+                //new Wall(new Vector2(500,300), this,new Vector2(800,300),20,Color.Purple),
+                //new Wall(new Vector2(500,600), this,new Vector2(800,600),20,Color.Purple),
+                new Wall(new Vector2(650,150), this,new Vector2(500,300),20,Color.Purple),
+                new Wall(new Vector2(500,300), this,new Vector2(650,450),20,Color.Purple),
+                new Wall(new Vector2(650,450), this,new Vector2(800,300),20,Color.Purple),
+                new Wall(new Vector2(650,150), this,new Vector2(800,300),20,Color.Purple),
             };
             foreach (Wall wall in Walls)
                 Entities.Add(wall);
