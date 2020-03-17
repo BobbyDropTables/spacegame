@@ -94,7 +94,7 @@ namespace AAI
             // Clear the screen and add a background color.
             spriteBatch.Begin();
 
-            // Draw all the entities.
+            // Draw all the Entities.
             world.Render(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);

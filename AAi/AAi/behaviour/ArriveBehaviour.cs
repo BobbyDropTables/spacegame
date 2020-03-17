@@ -12,16 +12,16 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-
-            var toTarget = ME.MyWorld.Target.Pos - ME.Pos;
+            Vector2 toTarget = ME.MyWorld.Target.Pos - ME.Pos;
             //calculate the distance to the target position
-            var dist = toTarget.Length();
-            if (dist > 1)
+            float dist = toTarget.Length();
+            if (dist > 0)
             {
-                var speed = dist / 50;
+                Console.WriteLine(dist);
+                float speed = dist / 50;
                 speed = Math.Min(speed, ME.MaxSpeed);
-                var desiredVelocity = (toTarget * speed) / dist;
-                return desiredVelocity- ME.Velocity;
+                Vector2 desiredVelocity = toTarget * speed / dist;
+                return desiredVelocity - ME.Velocity;
             }
 
             return new Vector2(0, 0);

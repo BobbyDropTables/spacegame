@@ -13,9 +13,9 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-            var tempTarget      = ME.MyWorld.Target.Pos;
-            var target          = ME.MyWorld.Target.Pos;
-            var DesiredVelocity = tempTarget-ME.Pos;
+            Vector2 tempTarget      = ME.MyWorld.Target.Pos;
+            Vector2 target          = ME.MyWorld.Target.Pos;
+            Vector2 DesiredVelocity = tempTarget - ME.Pos;
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
             Console.WriteLine(Vector2.Distance(ME.Pos, target));

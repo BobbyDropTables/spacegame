@@ -16,7 +16,8 @@ namespace AAI.world
         public           Target               Target { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
-        public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
+        public  List<BaseGameEntity> Entities  = new List<BaseGameEntity>();
+        public Random Random = new Random();
 
         public World(int w, int h)
         {
@@ -25,27 +26,30 @@ namespace AAI.world
             populate();
         }
 
-        internal object Where(Func<object, bool> p)
-        {
-            throw new NotImplementedException();
-        }
-
         private void populate()
         {
-            Target = new Target(new Vector2(100, 60), this);
+            Target = new Target(new Vector2(500, 300), this);
 
-            Vehicle v = new Vehicle(new Vector2(120, 70), this);
-            entities.Add(v);
+            Vehicle v = new Vehicle(new Vector2(300, 300), this);
+            Entities.Add(v);
+            v = new Vehicle(new Vector2(400, 400), this);
+            Entities.Add(v);
+            v = new Vehicle(new Vector2(600, 100), this);
+            Entities.Add(v);
+            v = new Vehicle(new Vector2(1000, 800), this);
+            Entities.Add(v);
+            v = new Vehicle(new Vector2(700, 300), this);
+            Entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
                 new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
-                new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
+                new Wall(new Vector2(Width, 0), this, new Vector2(Width, Height), 20, Color.Black),
+                new Wall(new Vector2(0, 0), this, new Vector2(0, Height), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-                new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
-                new Wall(new Vector2(100,100), this,new Vector2(200,100),20,Color.Purple)
+                new Wall(new Vector2(500,300), this,new Vector2(500,600),20,Color.Purple)
             };
             foreach (Wall wall in Walls)
-                entities.Add(wall);
+                Entities.Add(wall);
         }
 
         public void Update()
@@ -53,17 +57,16 @@ namespace AAI.world
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
                 Target.Pos = new Vector2(mouseState.X, mouseState.Y);
-            var melist = entities.Where(entity => entity is MovingEntity).ToList();
+            var melist = Entities.Where(entity => entity is MovingEntity).ToList();
             foreach (MovingEntity me in melist)
             {
-                me.SB = new ArriveBehaviour(me);
                 me.Update();
             }
         }
 
         public void Render(SpriteBatch spriteBatch)
         {
-            entities.ForEach(e => e.Render(spriteBatch));
+            Entities.ForEach(e => e.Render(spriteBatch));
             Target.Render(spriteBatch);
         }
     }

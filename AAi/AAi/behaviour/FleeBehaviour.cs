@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace AAI.behaviour
 {
-    class FleeBehaviour : SteeringBehaviour
+    internal class FleeBehaviour : SteeringBehaviour
     {
         public FleeBehaviour(MovingEntity me) : base(me)
         {
@@ -12,15 +12,13 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-            var tempPos      = ME.Pos;
-            var target          = ME.MyWorld.Target.Pos;
-            var DesiredVelocity = tempPos- target;
+            Vector2 tempPos         = ME.Pos;
+            Vector2 target          = ME.MyWorld.Target.Pos;
+            Vector2 DesiredVelocity = tempPos - target;
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
             Console.WriteLine(Vector2.Distance(ME.Pos, target));
-            return Vector2.Distance(ME.Pos,target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
+            return Vector2.Distance(ME.Pos, target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
         }
     }
 }
-
-

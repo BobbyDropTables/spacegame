@@ -8,7 +8,7 @@ namespace AAI.Entity
     public abstract class BaseGameEntity
     {
         public Vector2 Pos { get; set; }
-        public float Scale { get; set; }
+        public Vector2 Size { get; set; }
         public World MyWorld { get; set; }
         public Texture2D Texture;
 
@@ -16,7 +16,7 @@ namespace AAI.Entity
         {
             Pos = pos;
             MyWorld = w;
-            Scale = 20;
+            Size = new Vector2(20,20);
         }
 
         public virtual void Update()
