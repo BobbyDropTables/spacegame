@@ -1,37 +1,57 @@
-﻿using AAI.behaviour;
+﻿using System.Collections.Generic;
+using AAI.behaviour;
 using AAI.world;
 using Microsoft.Xna.Framework;
 
 namespace AAI.Entity.MovingEntities
 {
-    internal abstract class MovingEntity : BaseGameEntity
+    public abstract class MovingEntity : BaseGameEntity
     {
-        public Vector2 Velocity { get; set; }
-        public float    Mass     { get; set; }
-        public float    MaxSpeed { get; set; }
-        public float    Maxturn  { get; set; }
+        public Vector2 Velocity;
+        public Vector2 Heading;
+        public float Mass;
+        public float MaxSpeed;
+        public float Maxturn;
+        public float MaxForce;
+        public List<SteeringBehaviour> Behaviours;
+        public Vector2 Side = new Vector2(1, 0);
+        public Vector2 OldPosition;
 
-        public SteeringBehaviour SB { get; set; }
 
         public MovingEntity(Vector2 pos, World w) : base(pos, w)
         {
             Mass     = 4f;
-            MaxSpeed = 10;
-            Maxturn  = 2;
+            MaxSpeed = 2f;
+            Maxturn  = 0.00001f;
             Velocity = new Vector2();
+            MaxForce = 0.0005f;
         }
 
         public override void Update()
         {
-            var steeringforce = SB.Calculate();
-            var acceleration = steeringforce/Mass;
-            Velocity += (acceleration);
+            Vector2 steeringForce = new Vector2();
+            // Apply all behaviours
+            foreach (var behaviour in Behaviours)
+            {
+                steeringForce += behaviour.Calculate();
+            }
+
+            Velocity += steeringForce;
+
+            // Apply change heading and side when velocity is big enough
+            if (Velocity.Length() > 0.0000001)
+            {
+                Heading = Vector2.Normalize(Velocity);
+                Side    = new Vector2(-Heading.Y, Heading.X);
+            }
+
+
             if (Velocity.Length() > MaxSpeed)
             {
-                Velocity.Normalize();
-                Velocity *= MaxSpeed;
+                Velocity = Heading * MaxSpeed;
             }
-            this.Pos += Velocity;
+
+            Pos += Velocity;
         }
 
         public override string ToString()

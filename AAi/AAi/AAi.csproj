@@ -43,10 +43,12 @@
   <ItemGroup>
     <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
-    <Compile Include="behaviour\ObjectAvoidance.cs" />
+    <Compile Include="behaviour\WanderBehaviour.cs" />
+    <Compile Include="behaviour\WallAvoidance.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
     <Compile Include="behaviour\SteeringBehaviour.cs" />
     <Compile Include="Entity\BaseGameEntity.cs" />
+    <Compile Include="FpsCounter.cs" />
     <Compile Include="Entity\MovingEntities\MovingEntity.cs" />
     <Compile Include="Entity\MovingEntities\Vehicle.cs" />
     <Compile Include="Entity\staticEntities\StaticEntity.cs" />
