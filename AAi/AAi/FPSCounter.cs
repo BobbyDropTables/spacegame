@@ -1,42 +1,39 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace SimpleFpsCounter
+public class FrameCounter
 {
-    public class SimpleFps
+    public FrameCounter()
     {
-        private double frames       = 0;
-        private double updates      = 0;
-        private double elapsed      = 0;
-        private double last         = 0;
-        private double now          = 0;
-        public  double msgFrequency = 1.0f;
-        public  string msg          = "";
+    }
 
-        /// <summary>
-        /// The msgFrequency here is the reporting time to update the message.
-        /// </summary>
-        public void Update(GameTime gameTime)
+    public long  TotalFrames            { get; private set; }
+    public float TotalSeconds           { get; private set; }
+    public float AverageFramesPerSecond { get; private set; }
+    public float CurrentFramesPerSecond { get; private set; }
+
+    public const int MAXIMUM_SAMPLES = 100;
+
+    private Queue<float> _sampleBuffer = new Queue<float>();
+
+    public bool Update(float deltaTime)
+    {
+        CurrentFramesPerSecond = 1.0f / deltaTime;
+
+        _sampleBuffer.Enqueue(CurrentFramesPerSecond);
+
+        if (_sampleBuffer.Count > MAXIMUM_SAMPLES)
         {
-            now     = gameTime.TotalGameTime.TotalSeconds;
-            elapsed = (double)(now - last);
-            if (elapsed > msgFrequency)
-            {
-                msg = " Fps: " + (frames / elapsed).ToString() + "\n Elapsed time: " + elapsed.ToString() + "\n Updates: " + updates.ToString() + "\n Frames: " + frames.ToString();
-                //Console.WriteLine(msg);
-                elapsed = 0;
-                frames  = 0;
-                updates = 0;
-                last    = now;
-            }
-            updates++;
+            _sampleBuffer.Dequeue();
+            AverageFramesPerSecond = _sampleBuffer.Average(i => i);
+        }
+        else
+        {
+            AverageFramesPerSecond = CurrentFramesPerSecond;
         }
 
-        public void DrawFps(SpriteBatch spriteBatch, SpriteFont font, Vector2 fpsDisplayPosition, Color fpsTextColor)
-        {
-            spriteBatch.DrawString(font, msg, fpsDisplayPosition, fpsTextColor);
-            frames++;
-        }
+        TotalFrames++;
+        TotalSeconds += deltaTime;
+        return true;
     }
 }

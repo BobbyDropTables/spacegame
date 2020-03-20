@@ -16,9 +16,9 @@ namespace AAI
         private readonly GraphicsDeviceManager _graphics;
         private          SpriteBatch           spriteBatch;
         private          TextureStorage        textureStorage;
-
+        private FrameCounter _frameCounter = new FrameCounter();
         private readonly World world;
-
+        private SpriteFont font;
         public Game()
         {
             _graphics                           = new GraphicsDeviceManager(this);
@@ -51,7 +51,7 @@ namespace AAI
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureStorage.LoadTextures();
-
+            font = Content.Load<SpriteFont>("Font");
             // TODO: use this.Content to load your game content here
         }
 
@@ -89,13 +89,21 @@ namespace AAI
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Gray);
+            var deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            _frameCounter.Update(deltaTime);
+
+            var fps = string.Format("FPS: {0}", _frameCounter.AverageFramesPerSecond);
+
+            
 
             // Clear the screen and add a background color.
             spriteBatch.Begin();
-
             // Draw all the Entities.
             world.Render(spriteBatch);
+            //draw fps
+            spriteBatch.DrawString(font, fps, new Vector2(1, 1), Color.Red);
             spriteBatch.End();
             base.Draw(gameTime);
         }

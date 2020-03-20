@@ -19,8 +19,8 @@ namespace AAI.Entity.MovingEntities
             target = false;
             Behaviours = new List<SteeringBehaviour>
             {
-                //new ArriveBehaviour(this),
-                new WanderBehaviour(this,90,100),
+                new ArriveBehaviour(this),
+                //new WanderBehaviour(this,90,100),
                 new WallAvoidance(this, 15),
             };
 
@@ -41,12 +41,6 @@ namespace AAI.Entity.MovingEntities
                              origin,
                              SpriteEffects.None,
                              0f);
-            //foreach (var behaviour in Behaviours)
-            //{
-            //    behaviour.DebugDraw(spriteBatch, 1);
-            //}
-            
-            
         }
     }
 }

@@ -29,7 +29,7 @@ namespace AAI.world
         private void populate()
         {
             Target = new Target(new Vector2(500, 300), this);
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1; i++)
             {
                 Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
                 Entities.Add(v);
