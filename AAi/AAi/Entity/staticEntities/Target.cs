@@ -15,7 +15,7 @@ namespace AAI.Entity.staticEntities
         {
             Texture = TextureStorage.Textures["Target"];
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)Pos.X, (int)Pos.Y, (int) Scale, (int) Scale),
+                             new Rectangle((int) (Pos.X - (Scale / 2)), (int)(Pos.Y - (Scale / 2)), (int) Scale, (int) Scale),
                              null,
                              Color.White);
         }
