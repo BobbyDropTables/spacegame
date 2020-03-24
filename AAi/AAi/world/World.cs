@@ -18,15 +18,18 @@ namespace AAI.world
         public bool DrawGraph { get; set; }
         private readonly List<BaseGameEntity> entities  = new List<BaseGameEntity>();
         private readonly List<BaseGameEntity> walls     = new List<BaseGameEntity>();
-        private Graph NavGraph;
+
+        public GameMap gameMap { get; }
 
         public World(int w, int h)
         {
             Width  = w;
             Height = h;
+            gameMap = new GameMap(w, h);
+
             populate();
 
-            NavGraph = new Graph(w, h);
+            gameMap.FloodFill(walls);
         }
 
         private void populate()
@@ -41,14 +44,13 @@ namespace AAI.world
                 new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
-                new Wall(new Vector2(100,100), this,new Vector2(200,100),20,Color.Purple)
+                // Wall.CreateWall(this, new Vector2(12, 4))
             };
             foreach (Wall wall in Walls)
                 walls.Add(wall);
         }
 
         // Vertex to recolor last vertex to yellow
-        private Vertex[] lastColored;
         private bool isKeyReset = true;
         private bool PathingFinished = false;
         public void Update()
@@ -57,7 +59,7 @@ namespace AAI.world
             if (mouseState.LeftButton == ButtonState.Pressed)
             {
                 PathingFinished = false;
-                NavGraph.Reset();
+                // NavGraph.Reset();
 
                 int mX = mouseState.X;
                 int mY = mouseState.Y;
@@ -74,35 +76,18 @@ namespace AAI.world
 
                 Target.Pos = new Vector2(mX, mY);
 
-                // Color last selected vertex to yellow
-                if (lastColored != null)
-                {
-                    lastColored[0].color = Color.Yellow;
-                    lastColored[1].color = Color.Yellow;
-                }
-                else
-                {
-                    lastColored = new Vertex[2];
-                }
-
                 if (!PathingFinished)
                 {
-                    NavGraph.Reset();
                     // Get the closest Vertex to current mouse click
-                    var source = NavGraph.ClosestVertexToPosition((int)entities[0].Pos.X, (int)entities[0].Pos.Y);
-                    var destination = NavGraph.ClosestVertexToPosition(mX, mY);
+                    var source = new Vector2((int)entities[0].Pos.X, (int)entities[0].Pos.Y);
+                    var destination = new Vector2(mX, mY);
 
                     if (source != null && destination != null)
                     {
-                        // Color current Vertex to Red
-                        source.color = Color.Red;
-                        destination.color = Color.Red;
+                        List<Edge> Path = gameMap.PathingPipeline(source, destination);
+                        if(Path != null)
+                            gameMap.commands = Path;
 
-                        lastColored[0] = source;
-                        lastColored[1] = destination;
-
-                        List<Vertex> Path = NavGraph.A_Star(source, destination);
-                        Graph.DrawPath(Path);
                         PathingFinished = true;
                     }
                 }
@@ -136,7 +121,7 @@ namespace AAI.world
             entities.ForEach(e => e.Render(spriteBatch));
             if (DrawGraph)
             {
-                NavGraph.Draw(spriteBatch);
+                gameMap.Render(spriteBatch);
             }
 
             Target.Render(spriteBatch);

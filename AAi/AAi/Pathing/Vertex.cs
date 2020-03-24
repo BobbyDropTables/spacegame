@@ -14,15 +14,15 @@ namespace AAI.Pathing
         public List<Edge> adjacent { get; }
         public int x { get; set; }
         public int y { get; set; }
+        public Vector2 position { get; set; }
 
         public bool visited { get; set; }
         public Vertex previous;
-
+        public bool canTraverse { get; set; }
         public double g { get; set; }
         public double h { get; set; }
         public double f { get; set; }
 
-        public Vector2 position { get; set; }
         public Texture2D Texture;
         public Color color { get; set; }
 
@@ -38,9 +38,10 @@ namespace AAI.Pathing
             this.h = Double.PositiveInfinity;
             this.f = Double.PositiveInfinity;
 
+            this.canTraverse = true;
             this.previous = null;
             this.visited = false;
-            this.color = Color.Yellow;
+            this.color = Color.YellowGreen;
         }
 
         public void Reset()
@@ -49,28 +50,39 @@ namespace AAI.Pathing
             this.h = Double.PositiveInfinity;
             this.f = Double.PositiveInfinity;
 
-            color = Color.Yellow;
+            color = Color.YellowGreen;
             previous = null;
             visited = false;
         }
 
         public void Draw(SpriteBatch sb)
         {
-
-            //Draw dot
-            Texture = TextureStorage.Textures["Vertex"];
-            sb.Draw(Texture,
-                new Rectangle((int)position.X - 3, (int)position.Y - 3, (int)7, (int)7),
-                null,
-                this.color);
-
-            if (this.adjacent.Count > 0)
+            if (canTraverse)
             {
-                foreach (Edge current in adjacent)
+                DrawVertex(sb);
+
+                if (this.adjacent.Count > 0)
                 {
-                    //Draw Line
-                    current.Draw(sb);
+                    foreach (Edge current in adjacent)
+                    {
+                        //Draw Line
+                        current.Draw(sb);
+                    }
                 }
+            }
+            
+        }
+
+        public void DrawVertex(SpriteBatch sb)
+        {
+            if (canTraverse)
+            {
+                //Draw dot
+                Texture = TextureStorage.Textures["Vertex"];
+                sb.Draw(Texture,
+                    new Rectangle((int)position.X - 3, (int)position.Y - 3, (int)7, (int)7),
+                    null,
+                    this.color);
             }
         }
     }

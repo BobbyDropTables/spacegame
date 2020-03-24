@@ -11,7 +11,7 @@ namespace AAI.Pathing
     public class Edge
     {
         public double cost { get; }
-        private Vertex source { get; }
+        public Vertex source { get; }
         public Vertex destination { get; }
         public Texture2D Texture;
         public Color color { get; set; }
@@ -21,7 +21,7 @@ namespace AAI.Pathing
             this.source = source;
             this.destination = destination;
             this.cost = cost;
-            this.color = Color.Yellow;
+            this.color = Color.YellowGreen;
         }
         public void Draw(SpriteBatch sb)
         {

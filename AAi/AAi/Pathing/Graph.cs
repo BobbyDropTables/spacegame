@@ -17,40 +17,39 @@ namespace AAI
     class Graph
     {
         private Vertex[,] vertices;
-        private int WIDTH;
-        private int HEIGHT;
+        private GameMap gameMap;
 
-        private const int TILE_SIZE = 40;
-
-        public Graph(int width, int height)
+        public Graph(GameMap gamemap)
         {
-            this.WIDTH = width / TILE_SIZE;
-            this.HEIGHT = height / TILE_SIZE;
+            this.gameMap = gamemap;
+            this.vertices = new Vertex[gameMap.WIDTH, gameMap.HEIGHT];
 
-            this.vertices = new Vertex[WIDTH, HEIGHT];
-
-            for (int x = 0; x < WIDTH; x++)
+            for (int x = 0; x < gameMap.WIDTH; x++)
             {
-                for (int y = 0; y < HEIGHT; y++)
+                for (int y = 0; y < gameMap.HEIGHT; y++)
                 {
-                    vertices[x, y] = new Vertex(x, y, new Vector2(IndexToCoordinate(x), IndexToCoordinate(y)));
+                    vertices[x, y] = new Vertex(x, y, new Vector2(gamemap.IndexToCoordinate(x), gamemap.IndexToCoordinate(y)));
                 }
             }
 
-            Fill();
+            // Fill();
         }
 
-        private Vertex GetVertex(int x, int y)
+        public Vertex GetVertex(int x, int y)
         {
-            if ((x < 0 || x >= WIDTH) || (y < 0 || y >= HEIGHT))
+            if ((x < 0 || x >= gameMap.WIDTH) || (y < 0 || y >= gameMap.HEIGHT))
             {
                 Console.WriteLine("GetVertex: Out of bounds. [x: " + x + ", y: " + y + "]");
                 return null;
             }
             else
             {
-                return  vertices[x, y];
+                Vertex v = vertices[x, y];
+                if(v.canTraverse)
+                    return  v;
             }
+
+            return null;
         }
 
         public void Reset()
@@ -74,43 +73,50 @@ namespace AAI
             int posX = 0;
             int posY = 0;
 
-            if (!(x < 0) || !(x >= WIDTH))
+            if (!(x < 0) || !(x >= gameMap.WIDTH))
             {
-                double temp = (double) x / TILE_SIZE;
+                double temp = (double) x / gameMap.TILE_SIZE;
                 posX = (int)(Math.Ceiling(temp)) - 1;
 
                 if (posX < 0)
                     posX = 0;
-                if (posX >= WIDTH)
-                    posX = WIDTH - 1;
+                if (posX >= gameMap.WIDTH)
+                    posX = gameMap.WIDTH - 1;
             }
-            if (!(y < 0) || !(y >= HEIGHT))
+            if (!(y < 0) || !(y >= gameMap.HEIGHT))
             {
-                double temp = (double)y / TILE_SIZE;
+                double temp = (double)y / gameMap.TILE_SIZE;
                 posY = (int)(Math.Ceiling(temp)) - 1;
 
                 if (posY < 0)
                     posY = 0;
-                if (posY >= HEIGHT)
-                    posY = HEIGHT - 1;
+                if (posY >= gameMap.HEIGHT)
+                    posY = gameMap.HEIGHT - 1;
 
             }
 
             return GetVertex(posX, posY);
         }
 
-        private void Fill()
+        public void Fill()
         {
-            for (int x = 0; x < WIDTH; x++)
+            for (int x = 0; x < gameMap.WIDTH; x++)
             {
-                for (int y = 0; y < HEIGHT; y++)
+                for (int y = 0; y < gameMap.HEIGHT; y++)
                 {
-                    FillPerimeter(vertices[x,y]);
+                    Vertex v = GetVertex(x, y);
+                    if(v != null)
+                        FillPerimeter(v);
                 }
             }
         }
         private void FillPerimeter(Vertex source)
         {
+            if (source == null)
+                return;
+            if (!source.canTraverse)
+                return;
+
             for (int x = -1; x < 2; x++)
             {
                 for (int y = -1; y < 2; y++)
@@ -126,8 +132,8 @@ namespace AAI
                     if (temp != 1)
                         distance = 1.4;
 
-                    if ((indexX >= 0 && indexX < WIDTH)
-                        && (indexY >= 0 && indexY < HEIGHT))
+                    if ((indexX >= 0 && indexX < gameMap.WIDTH)
+                        && (indexY >= 0 && indexY < gameMap.HEIGHT))
                     {
                         AddEdge(
                             new Vector2(source.x, source.y),
@@ -138,71 +144,22 @@ namespace AAI
                 }
             }
         }
-        public int IndexToCoordinate(int index)
-        {
-            return (index + 1) * TILE_SIZE - (TILE_SIZE / 2);
-        }
-
-        public int Heuristics(Vertex source, Vertex destination)
-        {
-            int x = (int)Math.Abs(destination.x - source.x);
-            int y = (int)Math.Abs(destination.y - source.y);
-            return x + y;
-        }
-
+        
+        // TODO
         public void Draw(SpriteBatch sb)
         {
-            for (int x = 0; x < WIDTH; x++)
+            for (int x = 0; x < gameMap.WIDTH; x++)
             {
-                for (int y = 0; y < HEIGHT; y++)
+                for (int y = 0; y < gameMap.HEIGHT; y++)
                 {
-                    vertices[x, y].Draw(sb);
+                    Vertex v = GetVertex(x, y);
+                    // if(v != null)
+                        v.Draw(sb);
                 }
             }
         }
 
-        public List<Vertex> A_Star(Vertex source, Vertex destination)
-        {
-            PriorityQueue frontier = new PriorityQueue();
-
-            List<Vertex> path = new List<Vertex>();
-            source.g = 0;
-            frontier.Add(source);
-
-            while (frontier.Size() > 0)
-            {
-                Vertex current = frontier.Remove();
-
-                if (IsDestination(current, destination))
-                    return BuildPathFromEnd(source, destination);
-
-                foreach (var neighbor in current.adjacent)
-                {
-                    var next = neighbor.destination;
-                    double newCost = current.g + neighbor.cost;
-
-                    if (newCost < next.g)
-                    {
-                        next.g = newCost;
-                        double heuristics = Heuristics(next, destination);
-                        next.h = heuristics;
-                        next.previous = current;
-                        double priority = newCost + heuristics;
-                        next.f = priority;
-
-                        if (next.visited == false)
-                        {
-                            frontier.Add(next);
-                            next.visited = true;
-                        }
-                    }
-                }
-            }
-
-            // Return null if no path is found
-            return null;
-        }
-
+        // TODO
         public static void DrawPath(List<Vertex> path)
         {
             foreach (var current in path)
@@ -211,41 +168,19 @@ namespace AAI
             }
         }
 
-        /**
-         * Builds a path from end to start Vertex
-         * @return List of vertices with path
-         */
-        private List<Vertex> BuildPathFromEnd(Vertex start, Vertex end)
-        {
-            List<Vertex> path = new List<Vertex>();
-
-            for (Vertex current = end; current != start; current = current.previous)
-            {
-                path.Add(current);
-            }
-
-            path.Reverse();
-            return path;
-        }
-
-        private bool IsDestination(Vertex check, Vertex destination)
-        {
-            if (check.x == destination.x && check.y == destination.y)
-                return true;
-            else
-                return false;
-        }
-
+        // TODO:
+        // NOT HERE
         public static void DrawLine(SpriteBatch spriteBatch, Vector2 begin, Vector2 end, Color color, int width = 1)
         {
             Rectangle r = new Rectangle((int)begin.X, (int)begin.Y, (int)(end - begin).Length() + width, width);
             Vector2 v = Vector2.Normalize(begin - end);
             float angle = (float)Math.Acos(Vector2.Dot(v, -Vector2.UnitX));
             if (begin.Y > end.Y) angle = MathHelper.TwoPi - angle;
-
-            Texture2D Pixel = TextureStorage.Textures["Vertex"];
-
+        
+            Texture2D Pixel = TextureStorage.Textures["Pixel"];
+        
             spriteBatch.Draw(Pixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
         }
+
     }
 }

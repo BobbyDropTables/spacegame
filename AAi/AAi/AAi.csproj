@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AStarSearch.cs" />
     <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
     <Compile Include="behaviour\ObjectAvoidance.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Entity\staticEntities\Target.cs" />
     <Compile Include="Entity\staticEntities\Wall.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="GameMap.cs" />
     <Compile Include="Pathing\Graph.cs" />
     <Compile Include="Pathing\Edge.cs" />
     <Compile Include="Pathing\PriorityQueue.cs" />
