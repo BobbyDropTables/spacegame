@@ -203,8 +203,8 @@ namespace AAI
                     ready = true;
                 }
 
-                var Line = new Tuple<Vector2, Vector2>(new Vector2(A.x, A.y), 
-                    new Vector2(C.x, C.y));
+                var Line = new Tuple<Vector2, Vector2>(A.position, 
+                    C.position);
 
                 bool intersects = false;
                 // Check if line intersects with a static object
@@ -213,6 +213,8 @@ namespace AAI
                     if (LineIntersection2D(Line.Item1, Line.Item2, entity.Start, entity.End))
                     {
                         intersects = true;
+                        Console.WriteLine("LINE INTERSECTS WITH OBJECT AT: " + entity.Start + ", " + entity.End);
+                        Console.WriteLine("FROM ENTITY: " + Line.Item1 + ", " + Line.Item2);
                         break;
                     }
                 }

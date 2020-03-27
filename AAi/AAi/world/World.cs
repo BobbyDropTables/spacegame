@@ -40,11 +40,11 @@ namespace AAI.world
             entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
-                // new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
-                // new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
-                // new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-                // new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
-                // Wall.CreateWall(this, new Vector2(12, 4))
+                new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
+                new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
+                new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
+                new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
+                new Wall(new Vector2(520, 520), this, new Vector2(1100, 520), 20, Color.Blue )
             };
             foreach (Wall wall in Walls)
                 walls.Add(wall);
