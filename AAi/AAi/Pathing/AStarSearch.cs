@@ -64,6 +64,7 @@ namespace AAI
             {
                 path.Add(current);
             }
+            path.Add(start);
 
             path.Reverse();
             return path;

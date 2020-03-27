@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using AAI.Entity;
+using AAI.Entity.staticEntities;
 using AAI.Pathing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,21 +15,29 @@ namespace AAI
 {
     public class GameMap
     {
-        public int WIDTH { get; set; }
-        public int HEIGHT { get; set; }
-        public int TILE_SIZE { get; set; }
+        public int SCREEN_WIDTH { get; }
+        public int SCREEN_HEIGHT { get; }
+
+        public int TILE_SIZE { get; }
+        public int INDEX_WIDTH { get; }
+        public int INDEX_HEIGHT { get; }
 
         private Graph NavGraph;
-        public List<Edge> commands;
-        
+        public Queue<Edge> commands;
+        public Queue<Edge> astar;
+
+
         public GameMap(int width, int height, int tileSize = 40)
         {
-            this.WIDTH = width;
-            this.HEIGHT = height;
+            this.SCREEN_WIDTH = width;
+            this.SCREEN_HEIGHT = height;
             this.TILE_SIZE = tileSize;
 
+            this.INDEX_WIDTH = SCREEN_WIDTH / TILE_SIZE;
+            this.INDEX_HEIGHT = SCREEN_HEIGHT / TILE_SIZE;
+                
             this.canRender = true;
-            this.commands = new List<Edge>();
+            this.commands = new Queue<Edge>();
             this.NavGraph = new Graph(this);
 
         }
@@ -36,27 +47,46 @@ namespace AAI
             //1.    Fill navGraph with only vertices
 
             //2.    Check collisions and change individual vertices that aren't reachable
-
+            for (int x = 0; x < INDEX_WIDTH; x++)
+            {
+                for (int y = 0; y < INDEX_HEIGHT; y++)
+                {
+                    Vertex current = NavGraph.GetVertex(x, y);
+                    if (current != null)
+                    {
+                        foreach (Wall entity in statics)
+                        {
+                            // Check if entity collides with Vertex
+                        }
+                    }
+                }
+            }
             //3.    Add edges
-            // NavGraph.Fill();
+            NavGraph.Fill();
 
         }
 
-        public List<Edge> PathingPipeline(Vector2 entityPosition, Vector2 targetPosition)
+        public Queue<Edge> PathingPipeline(Vector2 entityPosition, Vector2 targetPosition, List<BaseGameEntity> statics)
         {
             //1.    Reset current graph values
             NavGraph.Reset();
             entityPosition = BoundVector(entityPosition);
             targetPosition = BoundVector(targetPosition);
+            // Make sure the list of static entities contains only Wall objects
+            List<BaseGameEntity> staticEntities = statics.Where(current => current is Wall).ToList();
 
             //2.    Get closest visible Vertex from source and destination
             var source = NavGraph.ClosestVertexToPosition((int)entityPosition.X, (int)entityPosition.Y);
             var destination = NavGraph.ClosestVertexToPosition((int)targetPosition.X, (int)targetPosition.Y);
 
+            if (source == null || destination == null)
+                return null;
             //3.    Run A* and get path of vertices
             var aStar = new AStarSearch();
-            var pathOfVertices = aStar.Search(source, destination);
-
+            var pathOfVertices = new List<Vertex>();
+            
+            pathOfVertices = aStar.Search(source, destination);
+            
             // Return null if no path is found
             if (pathOfVertices == null) 
                 return null;
@@ -69,22 +99,145 @@ namespace AAI
             pathOfVertices.Insert(0, entity);
             pathOfVertices.Add(target);
 
+            // TODO: remove
+            astar = BuildEdgeQueue(pathOfVertices);
+
             //5.    Run algorithm through vertices to check if angles are the same
             //      Remove vertices that are angled the same and create new list of edges.
-            var pathOfEdges = RemoveVerticesWithEqualDirection(pathOfVertices);
+            pathOfVertices = RemoveVerticesWithEqualDirection(pathOfVertices);
 
             // Return null if no path is found
-            if (pathOfEdges == null || pathOfEdges.Count == 0)
+            if (pathOfVertices == null || pathOfVertices.Count == 0)
                 return null;
 
             //6.    Apply path smoothing 
+            pathOfVertices = SmoothPath(pathOfVertices, staticEntities);
 
             //7.    Return list of edges with fastest possible route.
-            return pathOfEdges;
+            var result = BuildEdgeQueue(pathOfVertices);
+            return result;
 
         }
 
-        private List<Edge> RemoveVerticesWithEqualDirection(List<Vertex> path)
+        private Queue<Edge> BuildEdgeQueue(List<Vertex> vertices)
+        {
+            List<Edge> edges = new List<Edge>();
+            Vertex first = null;
+            Vertex second = null;
+
+            for (int i = 0; i < vertices.Count; i++)
+            {
+                if (first == null)
+                {
+                    first = vertices[i];
+                    continue;
+                }
+
+                if (second == null)
+                {
+                    second = vertices[i];
+
+                    Edge temp = new Edge(first, second, 0);
+                    temp.color = Color.Red;
+                    temp.source.color = Color.Red;
+                    temp.destination.color = Color.Red;
+                    edges.Add(temp);
+                    first = second;
+                    second = null;
+                }
+            }
+            Queue<Edge> result = new Queue<Edge>();
+            foreach (var edge in edges)
+            {
+                result.Enqueue(edge);
+            }
+            Console.WriteLine("V: " + vertices.Count + ", E: " + result.Count);
+            return result;
+        }
+
+        /**
+         *
+         */
+        private List<Vertex> SmoothPath(List<Vertex> input, List<BaseGameEntity> statics)
+        {
+            if (input == null || statics == null)
+                return null;
+            
+            List<Vertex> result = new List<Vertex>();
+
+            if (input.Count < 2)
+            {
+                foreach (var vertex in input)
+                {
+                    result.Add(vertex);
+                }
+
+                return result;
+            }
+            Stack<Vertex> stack = new Stack<Vertex>();
+            input.Reverse();
+
+            // stack.Push(input[0]);
+            foreach (var current in input)
+            {
+                stack.Push(current);
+            }
+
+            Vertex A = null;
+            Vertex B = null;
+            Vertex C = null;
+            
+            bool ready = false;
+            while (!ready)
+            {
+                // Pop three vertices off stack
+                A = stack.Pop();
+                B = stack.Pop();
+
+                if(stack.Count != 0)
+                    C = stack.Pop();
+                else // If third vertex is null add A and B to list
+                {
+                    result.Add(A);
+                    result.Add(B);
+                    ready = true;
+                }
+
+                var Line = new Tuple<Vector2, Vector2>(new Vector2(A.x, A.y), 
+                    new Vector2(C.x, C.y));
+
+                bool intersects = false;
+                // Check if line intersects with a static object
+                foreach (Wall entity in statics)
+                {
+                    if (LineIntersection2D(Line.Item1, Line.Item2, entity.Start, entity.End))
+                    {
+                        intersects = true;
+                        break;
+                    }
+                }
+
+                if (intersects)
+                {
+                    result.Add(A);
+                    stack.Push(C);
+                    stack.Push(B);
+                }
+                else
+                {
+                    stack.Push(C);
+                    stack.Push(A);
+                }
+            }
+
+            return result;
+        }
+        /**
+         * Algorithm to remove vertices with the same direction.
+         * @return A list of vertices
+         * @return null if path encounters an error.
+         */
+        private List<Vertex> RemoveVerticesWithEqualDirection(List<Vertex> path)
         {
             if (path.Count <= 0)
                 return null;
@@ -95,12 +248,16 @@ namespace AAI
             Vertex begin = null;
             Vertex previous = null;
 
-            for(int i = 0; i < path.Count; i++)
+            for (int i = 0; i < path.Count; i++)
             {
                 var current = path[i];
 
                 if (i == path.Count - 1)
+                {
+                    list.Add(new Edge(begin, previous, 0));
                     list.Add(new Edge(previous, current, 0));
+                    break;
+                }
 
                 if (current == null)
                     list.Add(new Edge(begin, previous, 0));
@@ -129,16 +286,24 @@ namespace AAI
                 previous = current;
             }
 
-            foreach (var edge in list)
+            // Convert edges to vertices
+            List<Vertex> result = new List<Vertex>();
+            for (int i = 0; i < list.Count; i++)
             {
-                edge.color = Color.Blue;
-                edge.destination.color = Color.Blue;
-                edge.source.color = Color.Blue;
-
+                var current = list[i];
+                if (i == 0)
+                {
+                    result.Add(current.source);
+                }
+                result.Add(current.destination);
             }
-            return list;
+            return result;
         }
 
+        /**
+         * Calculate the angle between two vertices
+         * @return the angle in radians between 0 and 360
+         */
         private double CalculateAngle(Vertex first, Vertex second)
         {
             var deltaX = Math.Pow((second.x - first.x), 2);
@@ -150,19 +315,66 @@ namespace AAI
             return angle;
         }
 
+        /**
+         * Check whether a vector fits inside the screen size.
+         * @return a Vector2 with a bounded position if vector was outside screen size.
+         */
         private Vector2 BoundVector(Vector2 position)
         {
             if (position.X < 0)
                 position.X = 0;
-            else if (position.X >= WIDTH)
-                position.X = WIDTH;
+            else if (position.X >= SCREEN_WIDTH)
+                position.X = SCREEN_WIDTH;
 
             if (position.Y < 0)
                 position.Y = 0;
-            else if (position.Y >= HEIGHT)
-                position.Y = HEIGHT;
+            else if (position.Y >= SCREEN_HEIGHT)
+                position.Y = SCREEN_HEIGHT;
 
             return position;
+        }
+
+        /**
+         * Check whether a vertex fits inside the screen size.
+         * @return a vertex with a bounded position if vector was outside screen size.
+         */
+        private Vertex BoundVertex(Vertex position)
+        {
+            int newX = (int)position.position.X;
+            int newY = (int)position.position.Y;
+            if (position.position.X < 0)
+                newX = 0;
+            else if (position.position.X >= SCREEN_WIDTH)
+                newX = SCREEN_WIDTH;
+
+            if (position.position.Y < 0)
+                newY = 0;
+            else if (position.position.Y >= SCREEN_HEIGHT)
+                newY= SCREEN_HEIGHT;
+
+            position.position = new Vector2(newX, newY);
+            return position;
+        }
+
+        private bool LineIntersection2D(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+        {
+            float rTop = (A.Y - C.Y) * (D.X - C.X) - (A.X - C.X) * (D.Y - C.Y);
+            float sTop = (A.Y - C.Y) * (B.X - A.X) - (A.X - C.X) * (B.Y - A.Y);
+
+            float Bot = (B.X - A.X) * (D.Y - C.Y) - (B.Y - A.Y) * (D.X - C.X);
+
+            if (Bot == 0) //parallel
+                return false;
+
+            float invBot = 1.0f / Bot;
+            float r = rTop * invBot;
+            float s = sTop * invBot;
+
+            if (r > 0 && r < 1 && s > 0 && s < 1)
+                return true; //lines intersect
+
+            //lines do not intersect
+            return false;
         }
 
         public int IndexToCoordinate(int index)
@@ -187,7 +399,21 @@ namespace AAI
 
                     }
                 }
-                
+                // if (astar != null)
+                // {
+                //     foreach (var current in astar)
+                //     {
+                //         current.source.color = Color.Blue;
+                //         current.destination.color = Color.Blue;
+                //         current.color = Color.Blue;
+                //
+                //         current.Draw(spriteBatch);
+                //         current.source.DrawVertex(spriteBatch);
+                //         current.destination.DrawVertex(spriteBatch);
+                //
+                //     }
+                // }
+
             }
         }
     }

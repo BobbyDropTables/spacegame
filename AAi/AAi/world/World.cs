@@ -40,10 +40,10 @@ namespace AAI.world
             entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
-                new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
-                new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
-                new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-                new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
+                // new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
+                // new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
+                // new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
+                // new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
                 // Wall.CreateWall(this, new Vector2(12, 4))
             };
             foreach (Wall wall in Walls)
@@ -84,7 +84,7 @@ namespace AAI.world
 
                     if (source != null && destination != null)
                     {
-                        List<Edge> Path = gameMap.PathingPipeline(source, destination);
+                        var Path = gameMap.PathingPipeline(source, destination, walls);
                         if(Path != null)
                             gameMap.commands = Path;
 

@@ -22,22 +22,22 @@ namespace AAI
         public Graph(GameMap gamemap)
         {
             this.gameMap = gamemap;
-            this.vertices = new Vertex[gameMap.WIDTH, gameMap.HEIGHT];
+            this.vertices = new Vertex[gameMap.INDEX_WIDTH, gameMap.INDEX_HEIGHT];
 
-            for (int x = 0; x < gameMap.WIDTH; x++)
+            for (int x = 0; x < gameMap.INDEX_WIDTH; x++)
             {
-                for (int y = 0; y < gameMap.HEIGHT; y++)
+                for (int y = 0; y < gameMap.INDEX_HEIGHT; y++)
                 {
                     vertices[x, y] = new Vertex(x, y, new Vector2(gamemap.IndexToCoordinate(x), gamemap.IndexToCoordinate(y)));
                 }
             }
 
-            // Fill();
         }
 
         public Vertex GetVertex(int x, int y)
         {
-            if ((x < 0 || x >= gameMap.WIDTH) || (y < 0 || y >= gameMap.HEIGHT))
+            // if ((x < 0 || x >= gameMap.WIDTH) || (y < 0 || y >= gameMap.HEIGHT))
+            if(!IsWithinIndexBounds(x, y))
             {
                 Console.WriteLine("GetVertex: Out of bounds. [x: " + x + ", y: " + y + "]");
                 return null;
@@ -59,6 +59,23 @@ namespace AAI
                 current.Reset();
             }
         }
+
+        private bool IsWithinIndexBounds(int x, int y)
+        {
+            if ((x < 0 || x >= gameMap.INDEX_WIDTH)
+                || (y < 0 || y >= gameMap.INDEX_HEIGHT))
+                return false;
+            else
+                return true;
+        }
+        private bool IsWithinScreenBounds(int x, int y)
+        {
+            if ((x < 0 || x >= gameMap.SCREEN_WIDTH)
+                || (y < 0 || y >= gameMap.SCREEN_HEIGHT))
+                return false;
+            else
+                return true;
+        }
         public void AddEdge(Vector2 source, Vector2 destination, double cost)
         {
             Vertex v = GetVertex((int)source.X, (int)source.Y);
@@ -68,30 +85,37 @@ namespace AAI
                 v.adjacent.Add(new Edge(v, w, cost));
         }
 
+        /**
+         * Get Closest Vertex to current x, y screen position
+         * @return the correct vertex
+         * @return null if the vertex does not exist
+         */
         public Vertex ClosestVertexToPosition(int x, int y)
         {
             int posX = 0;
             int posY = 0;
 
-            if (!(x < 0) || !(x >= gameMap.WIDTH))
+            // Check if x position is within bounds of the screen
+            if (!(x < 0) || !(x >= gameMap.SCREEN_WIDTH))
             {
                 double temp = (double) x / gameMap.TILE_SIZE;
                 posX = (int)(Math.Ceiling(temp)) - 1;
 
                 if (posX < 0)
                     posX = 0;
-                if (posX >= gameMap.WIDTH)
-                    posX = gameMap.WIDTH - 1;
+                if (posX >= gameMap.SCREEN_WIDTH)
+                    posX = gameMap.SCREEN_WIDTH - 1;
             }
-            if (!(y < 0) || !(y >= gameMap.HEIGHT))
+            // Check if y position is within bounds of the screen
+            if (!(y < 0) || !(y >= gameMap.SCREEN_HEIGHT))
             {
                 double temp = (double)y / gameMap.TILE_SIZE;
                 posY = (int)(Math.Ceiling(temp)) - 1;
 
                 if (posY < 0)
                     posY = 0;
-                if (posY >= gameMap.HEIGHT)
-                    posY = gameMap.HEIGHT - 1;
+                if (posY >= gameMap.SCREEN_HEIGHT)
+                    posY = gameMap.SCREEN_HEIGHT - 1;
 
             }
 
@@ -100,9 +124,9 @@ namespace AAI
 
         public void Fill()
         {
-            for (int x = 0; x < gameMap.WIDTH; x++)
+            for (int x = 0; x < gameMap.INDEX_WIDTH; x++)
             {
-                for (int y = 0; y < gameMap.HEIGHT; y++)
+                for (int y = 0; y < gameMap.INDEX_HEIGHT; y++)
                 {
                     Vertex v = GetVertex(x, y);
                     if(v != null)
@@ -132,8 +156,9 @@ namespace AAI
                     if (temp != 1)
                         distance = 1.4;
 
-                    if ((indexX >= 0 && indexX < gameMap.WIDTH)
-                        && (indexY >= 0 && indexY < gameMap.HEIGHT))
+                    // if ((indexX >= 0 && indexX < gameMap.INDEX_WIDTH)
+                    //     && (indexY >= 0 && indexY < gameMap.INDEX_HEIGHT))
+                    if(IsWithinIndexBounds(indexX, indexY))
                     {
                         AddEdge(
                             new Vector2(source.x, source.y),
@@ -148,12 +173,12 @@ namespace AAI
         // TODO
         public void Draw(SpriteBatch sb)
         {
-            for (int x = 0; x < gameMap.WIDTH; x++)
+            for (int x = 0; x < gameMap.INDEX_WIDTH; x++)
             {
-                for (int y = 0; y < gameMap.HEIGHT; y++)
+                for (int y = 0; y < gameMap.INDEX_HEIGHT; y++)
                 {
                     Vertex v = GetVertex(x, y);
-                    // if(v != null)
+                    if(v != null)
                         v.Draw(sb);
                 }
             }
