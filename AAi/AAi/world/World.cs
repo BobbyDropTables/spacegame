@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using AAI.behaviour;
 using AAI.Entity;
 using AAI.Entity.MovingEntities;
 using AAI.Entity.staticEntities;
@@ -6,7 +9,6 @@ using AAI.Pathing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SteeGameringCS.behaviour;
 
 namespace AAI.world
 {
@@ -34,21 +36,26 @@ namespace AAI.world
 
         private void populate()
         {
-            Target = new Target(new Vector2(100, 60), this);
+            Target = new Target(new Vector2(500, 300), this);
+            for (int i = 0; i < 1; i++)
+            {
+                Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
+                Entities.Add(v);
+            }
+            
 
-            Vehicle v = new Vehicle(new Vector2(120, 70), this);
-            entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
                 new Wall(new Vector2(0, 0), this, new Vector2(Width, 0), 20, Color.Black),
-                new Wall(new Vector2(Width, Height), this, new Vector2(Width, 0), 20, Color.Black),
+                new Wall(new Vector2(Width, 0), this, new Vector2(Width, Height), 20, Color.Black),
+                new Wall(new Vector2(0, 0), this, new Vector2(0, Height), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-                new Wall(new Vector2(0, Height), this, new Vector2(0, 0), 20, Color.Black),
+
                 new Wall(new Vector2(520, 520), this, new Vector2(1100, 520), 20, Color.Blue ),
                 new Wall(new Vector2(520, 520), this, new Vector2(80, 80), 20, Color.Blue ),
             };
             foreach (Wall wall in Walls)
-                walls.Add(wall);
+                Entities.Add(wall);
         }
 
         // Vertex to recolor last vertex to yellow
@@ -58,6 +65,7 @@ namespace AAI.world
         {
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
+
             {
                 PathingFinished = false;
                 // NavGraph.Reset();
@@ -111,7 +119,6 @@ namespace AAI.world
 
             foreach (MovingEntity me in entities)
             {
-                me.SB = new ArriveBehaviour(me);
                 me.Update();
             }
         }
@@ -124,7 +131,6 @@ namespace AAI.world
             {
                 gameMap.Render(spriteBatch);
             }
-
             Target.Render(spriteBatch);
         }
     }

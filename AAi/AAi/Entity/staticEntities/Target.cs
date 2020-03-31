@@ -14,10 +14,19 @@ namespace AAI.Entity.staticEntities
         public override void Render(SpriteBatch spriteBatch)
         {
             Texture = TextureStorage.Textures["Target"];
-            spriteBatch.Draw(Texture,
-                             new Rectangle((int) (Pos.X - (Scale / 2)), (int)(Pos.Y - (Scale / 2)), (int) Scale, (int) Scale),
+            var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+            spriteBatch.Draw(
+                             Texture,
+                             new Rectangle(
+                                           Pos.ToPoint(),
+                                           Size.ToPoint()),
+
                              null,
-                             Color.White);
+                             Color.Aqua,
+                             0.0f,
+                             origin,
+                             SpriteEffects.None,
+                             0f);
         }
     }
 }
