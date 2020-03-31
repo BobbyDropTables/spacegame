@@ -47,6 +47,7 @@ namespace AAI
             //1.    Fill navGraph with only vertices
 
             //2.    Check collisions and change individual vertices that aren't reachable
+            List<BaseGameEntity> staticEntities = statics.Where(current => current is Wall).ToList();
             for (int x = 0; x < INDEX_WIDTH; x++)
             {
                 for (int y = 0; y < INDEX_HEIGHT; y++)
@@ -54,16 +55,19 @@ namespace AAI
                     Vertex current = NavGraph.GetVertex(x, y);
                     if (current != null)
                     {
-                        foreach (Wall entity in statics)
+                        foreach (Wall entity in staticEntities)
                         {
                             // Check if entity collides with Vertex
+                            if(GameMap.LineIntersection2D(current.position, current.position, entity.Pos, entity.End))
+                            {
+                                current.canTraverse = false;
+                            }
                         }
                     }
                 }
             }
             //3.    Add edges
-            NavGraph.Fill();
-
+            NavGraph.Fill(staticEntities);
         }
 
         public Queue<Edge> PathingPipeline(Vector2 entityPosition, Vector2 targetPosition, List<BaseGameEntity> statics)
@@ -81,6 +85,7 @@ namespace AAI
 
             if (source == null || destination == null)
                 return null;
+
             //3.    Run A* and get path of vertices
             var aStar = new AStarSearch();
             var pathOfVertices = new List<Vertex>();
@@ -156,7 +161,9 @@ namespace AAI
         }
 
         /**
-         *
+         * Smooth a given path of vertices.
+         * Check if a new path can be plotted by creating a line.
+         * Check if that line intersects with any existing objects.
          */
         private List<Vertex> SmoothPath(List<Vertex> input, List<BaseGameEntity> statics)
         {
@@ -203,8 +210,7 @@ namespace AAI
                     ready = true;
                 }
 
-                var Line = new Tuple<Vector2, Vector2>(A.position, 
-                    C.position);
+                var Line = new Tuple<Vector2, Vector2>(A.position, C.position);
 
                 bool intersects = false;
                 // Check if line intersects with a static object
@@ -358,7 +364,7 @@ namespace AAI
             return position;
         }
 
-        private bool LineIntersection2D(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
+        public static bool LineIntersection2D(Vector2 A, Vector2 B, Vector2 C, Vector2 D)
         {
             float rTop = (A.Y - C.Y) * (D.X - C.X) - (A.X - C.X) * (D.Y - C.Y);
             float sTop = (A.Y - C.Y) * (B.X - A.X) - (A.X - C.X) * (B.Y - A.Y);
@@ -401,20 +407,20 @@ namespace AAI
 
                     }
                 }
-                // if (astar != null)
-                // {
-                //     foreach (var current in astar)
-                //     {
-                //         current.source.color = Color.Blue;
-                //         current.destination.color = Color.Blue;
-                //         current.color = Color.Blue;
-                //
-                //         current.Draw(spriteBatch);
-                //         current.source.DrawVertex(spriteBatch);
-                //         current.destination.DrawVertex(spriteBatch);
-                //
-                //     }
-                // }
+                if (astar != null)
+                {
+                    foreach (var current in astar)
+                    {
+                        current.source.color = Color.Blue;
+                        current.destination.color = Color.Blue;
+                        current.color = Color.Blue;
+                
+                        current.Draw(spriteBatch);
+                        current.source.DrawVertex(spriteBatch);
+                        current.destination.DrawVertex(spriteBatch);
+                
+                    }
+                }
 
             }
         }

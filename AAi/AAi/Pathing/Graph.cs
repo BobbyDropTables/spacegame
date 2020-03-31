@@ -7,8 +7,11 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using AAI.Entity;
+using AAI.Entity.staticEntities;
 using AAI.Pathing;
 using AAI.View;
+using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -36,7 +39,6 @@ namespace AAI
 
         public Vertex GetVertex(int x, int y)
         {
-            // if ((x < 0 || x >= gameMap.WIDTH) || (y < 0 || y >= gameMap.HEIGHT))
             if(!IsWithinIndexBounds(x, y))
             {
                 Console.WriteLine("GetVertex: Out of bounds. [x: " + x + ", y: " + y + "]");
@@ -122,7 +124,36 @@ namespace AAI
             return GetVertex(posX, posY);
         }
 
-        public void Fill()
+        // public Vertex ClosestVisibleVertex(Vector2 position, List<BaseGameEntity> statics)
+        // {
+        //     
+        // }
+
+        // TODO: WTF is this
+        private List<Vector2> GetFourClosestVectors(Vector2 position)
+        {
+            var list = new List<Vector2>();
+
+            Vector2 topleft, topright, bottomleft, bottomright;
+
+            topleft = new Vector2((int)Math.Floor(position.X), (int)Math.Floor(position.Y));
+            topright = new Vector2((int)Math.Ceiling(position.X), (int)Math.Floor(position.Y));
+            bottomleft = new Vector2((int)Math.Floor(position.X), (int)Math.Ceiling(position.Y));
+            bottomright = new Vector2((int)Math.Ceiling(position.X), (int)Math.Ceiling(position.Y));
+
+            if(topleft != null)
+                list.Add(topleft);
+            if (topright != null)
+                list.Add(topright);
+            if (bottomleft != null)
+                list.Add(bottomleft);
+            if (bottomright != null)
+                list.Add(bottomright);
+
+            return list;
+        }
+
+        public void Fill(List<BaseGameEntity> statics)
         {
             for (int x = 0; x < gameMap.INDEX_WIDTH; x++)
             {
@@ -130,11 +161,11 @@ namespace AAI
                 {
                     Vertex v = GetVertex(x, y);
                     if(v != null)
-                        FillPerimeter(v);
+                        FillPerimeter(v, statics);
                 }
             }
         }
-        private void FillPerimeter(Vertex source)
+        private void FillPerimeter(Vertex source, List<BaseGameEntity> statics)
         {
             if (source == null)
                 return;
@@ -156,15 +187,26 @@ namespace AAI
                     if (temp != 1)
                         distance = 1.4;
 
-                    // if ((indexX >= 0 && indexX < gameMap.INDEX_WIDTH)
-                    //     && (indexY >= 0 && indexY < gameMap.INDEX_HEIGHT))
                     if(IsWithinIndexBounds(indexX, indexY))
                     {
-                        AddEdge(
-                            new Vector2(source.x, source.y),
-                            new Vector2(indexX, indexY),
-                            distance
-                        );
+                        bool canPlace = true;
+                        foreach (Wall wall in statics)
+                        {
+                            if (GameMap.LineIntersection2D(source.position,
+                                new Vector2(indexX * gameMap.TILE_SIZE, indexY * gameMap.TILE_SIZE), wall.Start,
+                                wall.End))
+                            {
+                                canPlace = false;
+                                break;
+                            }
+                        }
+
+                        if (canPlace)
+                            AddEdge(
+                                new Vector2(source.x, source.y),
+                                new Vector2(indexX, indexY),
+                                distance
+                            );
                     }
                 }
             }
