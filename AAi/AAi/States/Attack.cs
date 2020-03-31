@@ -17,6 +17,12 @@ namespace AAI.States
 
         public override void Execute(MovingEntity t)
         {
+            var distance = t.Pos - t.MyWorld.Target.Pos;
+            if (distance.Length() < 1)
+            {
+                t.StateMachine.Changestate(new Wander());
+                return;
+            }
             if (t.energy > 0)
             {
                 t.energy--;
