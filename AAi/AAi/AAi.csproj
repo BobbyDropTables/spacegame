@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="behaviour\PathFollowing.cs" />
     <Compile Include="Pathing\AStarSearch.cs" />
     <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
