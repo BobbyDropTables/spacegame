@@ -40,7 +40,7 @@ namespace AAI.behaviour
             Vector2 point         = new Vector2(0, 0);
 
             // Examine each feeler in turn
-                List<BaseGameEntity> staticEntities = ME.MyWorld.Entities.Where(entity => entity is Wall).ToList();
+            List<BaseGameEntity> staticEntities = ME.MyWorld.walls;
                 // Run through walls
                 for (int wall = 0; wall < staticEntities.Count; wall++)
                 {

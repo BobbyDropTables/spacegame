@@ -14,14 +14,16 @@ namespace AAI.Entity.MovingEntities
         public bool target { get; set; }
         public Vehicle(Vector2 pos, World w) : base(pos, w)
         {
-            
+            //StateMachine = new StateMachine<MovingEntity>(this);
+            //StateMachine.State = new Attack();
             Velocity = new Vector2(0, 0);
             target = false;
             Behaviours = new List<SteeringBehaviour>
             {
+                new PathFollowing(this),
                 //new ArriveBehaviour(this),
-                new WanderBehaviour(this,90,100),
-                new WallAvoidance(this, 15),
+                //new WanderBehaviour(this,90,100),
+                //new WallAvoidance(this, 15),
             };
 
         }

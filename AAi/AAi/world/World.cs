@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using AAI.behaviour;
@@ -17,13 +17,10 @@ namespace AAI.world
         public           Target               Target { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
-<<<<<<< HEAD
-        public  List<BaseGameEntity> Entities  = new List<BaseGameEntity>();
+        public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
         public Random Random = new Random();
-=======
->>>>>>> PathFollowing
         public bool DrawGraph { get; set; }
-        private readonly List<BaseGameEntity> walls     = new List<BaseGameEntity>();
+        public  List<BaseGameEntity> walls     = new List<BaseGameEntity>();
 
         public GameMap gameMap { get; }
 
@@ -44,7 +41,7 @@ namespace AAI.world
             for (int i = 0; i < 1; i++)
             {
                 Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
-                Entities.Add(v);
+                entities.Add(v);
             }
             
 
@@ -54,15 +51,11 @@ namespace AAI.world
                 new Wall(new Vector2(Width, 0), this, new Vector2(Width, Height), 20, Color.Black),
                 new Wall(new Vector2(0, 0), this, new Vector2(0, Height), 20, Color.Black),
                 new Wall(new Vector2(0, Height), this, new Vector2(Width, Height), 20, Color.Black),
-<<<<<<< HEAD
-=======
-
->>>>>>> PathFollowing
                 new Wall(new Vector2(520, 520), this, new Vector2(1100, 520), 20, Color.Blue ),
                 new Wall(new Vector2(520, 520), this, new Vector2(80, 80), 20, Color.Blue ),
             };
             foreach (Wall wall in Walls)
-                Entities.Add(wall);
+                walls.Add(wall);
         }
 
         // Vertex to recolor last vertex to yellow
@@ -72,10 +65,6 @@ namespace AAI.world
         {
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed)
-<<<<<<< HEAD
-=======
-
->>>>>>> PathFollowing
             {
                 PathingFinished = false;
                 // NavGraph.Reset();
@@ -141,10 +130,7 @@ namespace AAI.world
             {
                 gameMap.Render(spriteBatch);
             }
-<<<<<<< HEAD
 
-=======
->>>>>>> PathFollowing
             Target.Render(spriteBatch);
         }
     }

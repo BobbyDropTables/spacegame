@@ -30,13 +30,12 @@ namespace AAI.Entity.MovingEntities
             Maxturn  = 0.00001f;
             Velocity = new Vector2();
             MaxForce = 0.0005f;
-            StateMachine = new StateMachine<MovingEntity>(this);
-            StateMachine.State = new Attack();
+            
         }
 
         public override void Update()
         {
-            StateMachine.Update();
+            //StateMachine.Update();
             Vector2 steeringForce = new Vector2();
             // Apply all behaviours
             foreach (var behaviour in Behaviours)

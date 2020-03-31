@@ -3,25 +3,28 @@ using System.Collections.Generic;
 using AAI.Entity.MovingEntities;
 using AAI.Pathing;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace AAI.behaviour
 {
     class PathFollowing : SteeringBehaviour
     {
-        // to do
+
+        Edge edge = new Edge(new Vertex(0, 0, new Vector2(0, 0)), new Vertex(0, 0, new Vector2(0, 0)), 0.0);
         public PathFollowing(MovingEntity me) : base(me)
         {
         }
 
         public override Vector2 Calculate()
         {
-            Queue<Edge> targetlist = ME.MyWorld.gameMap.commands;
+            Queue<Edge> targetlist = ME.MyWorld.gameMap.PathingPipeline(ME.Pos, ME.MyWorld.Target.Pos, ME.MyWorld.walls);
+            Console.WriteLine(targetlist);
             if (targetlist != null)
                 for (int i = 0; i < targetlist.Count; i++)
                 {
-                    Edge edge = new Edge(new Vertex(0, 0, new Vector2(0, 0)), new Vertex(0, 0, new Vector2(0, 0)), 0.0);
+                    
                     if (i == 0)
-                        edge = ME.MyWorld.gameMap.commands.Dequeue();
+                        edge = targetlist.Dequeue();
 
                     Vector2 target = edge.destination.position;
 
@@ -32,12 +35,17 @@ namespace AAI.behaviour
                     if (Vector2.Distance(ME.Pos, target) <= 2)
                     {
                         edge = ME.MyWorld.gameMap.commands.Dequeue();
-                        return DesiredVelocity - ME.Velocity;
+                        return new Vector2(0, 0);
                     }
-                    return new Vector2(0, 0);
+                    return DesiredVelocity - ME.Velocity;
                 }
 
             return new Vector2(0, 0);
+        }
+
+        public override void DebugDraw(SpriteBatch spriteBatch, float scale)
+        {
+            throw new NotImplementedException();
         }
     }
 }
