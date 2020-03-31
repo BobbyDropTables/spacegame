@@ -25,12 +25,24 @@ namespace AAI.Entity.staticEntities
 
         public override void Render(SpriteBatch spriteBatch)
         {
-            var length = Math.Sqrt(Math.Pow(End.X - Start.X, 2) + Math.Pow(End.Y - Start.Y, 2));
-            var angle  = Math.Atan2(End.Y - Start.Y, End.X - Start.X) - Math.PI / 2;
-
-            spriteBatch.Draw(TextureStorage.Textures["Line"],
-                             new Rectangle((int)Start.X, (int)Start.Y, (int)_width, (int)length), null, _color,
-                             (float)angle, new Vector2(0.5f, 0), SpriteEffects.None, 0);
+            Vector2 edge = End - Start;
+            // calculate angle to rotate line
+            float angle =
+                (float)Math.Atan2(edge.Y, edge.X);
+            Texture = TextureStorage.Textures["Line"];
+            var origin = new Vector2(0);
+            spriteBatch.Draw(Texture,
+                             new Rectangle( 
+                                           (int)Start.X,
+                                           (int)Start.Y,
+                                           (int)edge.Length(), 
+                                           _width),                
+                             null,
+                             _color,         
+                             angle,             
+                             new Vector2(0, 0.5f), 
+                             SpriteEffects.None,
+                             0);
         }
     }
 }
