@@ -61,19 +61,6 @@ namespace AAI.behaviour
                              SpriteEffects.None,
                              0);
             Vector2 size = new Vector2(wanderRadius + wanderRadius);
-            //// Draw border circle if neccesairy.
-            //spriteBatch.Draw(Texture,
-            //                 new Rectangle(
-            //                               new Point((int)(circlePos.X - size.X / 2 - 2), (int)(circlePos.Y - size.Y / 2 - 2)),
-            //                               new Point((int)(size.X                + 2 * 2), (int)(size.Y            + 2 * 2))),
-            //                 null, Color.Black);
-
-            //// Draw inner circle.
-            //spriteBatch.Draw(Texture,
-            //                 new Rectangle(
-            //                               new Point((int)(circlePos.X - size.X / 2), (int)(circlePos.Y - size.Y / 2)),
-            //                               new Point((int)size.X, (int)size.Y)),
-            //                 null, Color.BlueViolet);
         }
     }
 }
