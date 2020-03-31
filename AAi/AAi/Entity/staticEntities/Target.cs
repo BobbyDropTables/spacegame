@@ -20,6 +20,7 @@ namespace AAI.Entity.staticEntities
                              new Rectangle(
                                            Pos.ToPoint(),
                                            Size.ToPoint()),
+
                              null,
                              Color.Aqua,
                              0.0f,
