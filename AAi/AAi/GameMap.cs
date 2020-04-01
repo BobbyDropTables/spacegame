@@ -55,10 +55,10 @@ namespace AAI
                     Vertex current = NavGraph.GetVertex(x, y);
                     if (current != null)
                     {
-                        foreach (Wall entity in staticEntities)
+                        foreach (Wall wall in staticEntities)
                         {
                             // Check if entity collides with Vertex
-                            if(GameMap.LineIntersection2D(current.position, current.position, entity.Pos, entity.End))
+                            if(wall.IsWithin(current.position))
                             {
                                 current.canTraverse = false;
                             }
@@ -214,13 +214,12 @@ namespace AAI
 
                 bool intersects = false;
                 // Check if line intersects with a static object
-                foreach (Wall entity in statics)
+                foreach (Wall wall in statics)
                 {
-                    if (LineIntersection2D(Line.Item1, Line.Item2, entity.Start, entity.End))
+                    if(wall.Intersects(Line.Item1, Line.Item2))
                     {
                         intersects = true;
-                        Console.WriteLine("LINE INTERSECTS WITH OBJECT AT: " + entity.Start + ", " + entity.End);
-                        Console.WriteLine("FROM ENTITY: " + Line.Item1 + ", " + Line.Item2);
+                        
                         break;
                     }
                 }
@@ -407,20 +406,20 @@ namespace AAI
 
                     }
                 }
-                if (astar != null)
-                {
-                    foreach (var current in astar)
-                    {
-                        current.source.color = Color.Blue;
-                        current.destination.color = Color.Blue;
-                        current.color = Color.Blue;
-                
-                        current.Draw(spriteBatch);
-                        current.source.DrawVertex(spriteBatch);
-                        current.destination.DrawVertex(spriteBatch);
-                
-                    }
-                }
+                // if (astar != null)
+                // {
+                //     foreach (var current in astar)
+                //     {
+                //         current.source.color = Color.Blue;
+                //         current.destination.color = Color.Blue;
+                //         current.color = Color.Blue;
+                //
+                //         current.Draw(spriteBatch);
+                //         current.source.DrawVertex(spriteBatch);
+                //         current.destination.DrawVertex(spriteBatch);
+                //
+                //     }
+                // }
 
             }
         }

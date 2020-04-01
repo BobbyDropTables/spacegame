@@ -192,9 +192,10 @@ namespace AAI
                         bool canPlace = true;
                         foreach (Wall wall in statics)
                         {
-                            if (GameMap.LineIntersection2D(source.position,
-                                new Vector2(indexX * gameMap.TILE_SIZE, indexY * gameMap.TILE_SIZE), wall.Start,
-                                wall.End))
+                            // if (GameMap.LineIntersection2D(,
+                            //     new Vector2(indexX * gameMap.TILE_SIZE, indexY * gameMap.TILE_SIZE), wall.Start,
+                            //     wall.End))
+                            if (wall.Intersects(source.position, new Vector2(indexX * gameMap.TILE_SIZE, indexY * gameMap.TILE_SIZE)))
                             {
                                 canPlace = false;
                                 break;
