@@ -18,6 +18,7 @@ namespace AAI.behaviour
         private bool        start;
         private int         switchcase;
         private Vector2     target;
+        public bool finished = false;
 
         public PathFollowing(Vehicle me) : base(me)
         {
@@ -46,6 +47,7 @@ namespace AAI.behaviour
                     if (switchcase >= vehicle.Path.Count)
                     {
                         target = edge.destination.position;
+                        finished = true;
                     }
                     else
                     {
@@ -63,6 +65,7 @@ namespace AAI.behaviour
                     edge   = targetlist[switchcase];
                     target = edge.destination.position;
                     start  = true;
+                    finished = false;
                 }
             }
             else
