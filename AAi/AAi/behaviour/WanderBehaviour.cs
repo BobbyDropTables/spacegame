@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 using AAI.Entity.MovingEntities;
 using AAI.View;
 using Microsoft.Xna.Framework;
@@ -6,22 +7,34 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace AAI.behaviour
 {
-    internal class SeekBehaviour : SteeringBehaviour
+    internal class WanderBehaviour : SteeringBehaviour
     {
+        private readonly float wanderDistance;
+        private readonly float wanderRadius;
         private Vector2 result;
-        private Vector2 Target;
-        public SeekBehaviour(MovingEntity me, Vector2 target) : base(me)
+        private Vector2 circlePos;
+        private Vector2 target;
+
+        public WanderBehaviour(MovingEntity me, float radius, float distance) : base(me)
         {
-            Target = target;
+            wanderRadius   = radius;
+            wanderDistance = distance;
         }
 
         public override Vector2 Calculate()
         {
-            Vector2 DesiredVelocity = Target - ME.Pos;
-            DesiredVelocity.Normalize();
-            DesiredVelocity *= ME.MaxSpeed;
-            Console.WriteLine(Vector2.Distance(ME.Pos, Target));
-            result = Vector2.Distance(ME.Pos, Target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
+            var randomdeg = ME.MyWorld.Random.Next(0, 360);
+            float  sin    = (float) Math.Sin(MathHelper.ToDegrees(randomdeg));
+            float  cos    = (float) Math.Cos(MathHelper.ToDegrees(randomdeg));
+
+            float tx = wanderRadius;
+            int   ty = 0;
+
+            Vector2 rotate = new Vector2(cos * tx - sin * ty, sin * tx + cos * ty);
+
+            circlePos = ME.Pos      + ME.Velocity * wanderDistance;
+            target    = circlePos  + rotate;
+            result = Vector2.Normalize(target - ME.Pos);
             return result;
         }
 
@@ -47,6 +60,7 @@ namespace AAI.behaviour
                              new Vector2(0, 0.5f),
                              SpriteEffects.None,
                              0);
+            Vector2 size = new Vector2(wanderRadius + wanderRadius);
         }
     }
 }

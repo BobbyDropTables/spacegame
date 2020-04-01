@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using AAI.behaviour;
 using AAI.Entity;
 using AAI.Entity.MovingEntities;
 using AAI.Entity.staticEntities;
@@ -6,7 +9,6 @@ using AAI.Pathing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SteeGameringCS.behaviour;
 
 namespace AAI.world
 {
@@ -15,10 +17,10 @@ namespace AAI.world
         public           Target               Target { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
+        public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
+        public Random Random = new Random();
         public bool DrawGraph { get; set; }
-        private readonly List<BaseGameEntity> entities  = new List<BaseGameEntity>();
-        private readonly List<BaseGameEntity> walls     = new List<BaseGameEntity>();
-
+        public  List<BaseGameEntity> walls     = new List<BaseGameEntity>();
         public GameMap gameMap { get; }
 
         public World(int w, int h)
@@ -34,10 +36,14 @@ namespace AAI.world
 
         private void populate()
         {
-            Target = new Target(new Vector2(100, 60), this);
+            Target = new Target(new Vector2(500, 300), this);
+            for (int i = 0; i < 1; i++)
+            {
+                Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
+                entities.Add(v);
+            }
+            
 
-            Vehicle v = new Vehicle(new Vector2(120, 70), this);
-            entities.Add(v);
             List<Wall> Walls = new List<Wall>
             {
                 new Wall(new Vector2(520, 520), 
@@ -90,8 +96,10 @@ namespace AAI.world
                     var destination = new Vector2(mX, mY);
 
                     if (source != null && destination != null)
-                    {
+                    { 
                         var Path = gameMap.PathingPipeline(source, destination, walls);
+                        var test = (Vehicle) entities[0];
+                        test.Path = Path;
                         if(Path != null)
                             gameMap.commands = Path;
 
@@ -117,7 +125,6 @@ namespace AAI.world
 
             foreach (MovingEntity me in entities)
             {
-                me.SB = new ArriveBehaviour(me);
                 me.Update();
             }
         }

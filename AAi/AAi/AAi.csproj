@@ -41,13 +41,17 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="behaviour\PathFollowing.cs" />
     <Compile Include="Pathing\AStarSearch.cs" />
     <Compile Include="behaviour\ArriveBehaviour.cs" />
     <Compile Include="behaviour\FleeBehaviour.cs" />
-    <Compile Include="behaviour\ObjectAvoidance.cs" />
+    <Compile Include="behaviour\WanderBehaviour.cs" />
+    <Compile Include="behaviour\WallAvoidance.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />
     <Compile Include="behaviour\SteeringBehaviour.cs" />
+    <Compile Include="Controller\StateMachine.cs" />
     <Compile Include="Entity\BaseGameEntity.cs" />
+    <Compile Include="FpsCounter.cs" />
     <Compile Include="Entity\MovingEntities\MovingEntity.cs" />
     <Compile Include="Entity\MovingEntities\Vehicle.cs" />
     <Compile Include="Entity\staticEntities\StaticEntity.cs" />
@@ -61,6 +65,10 @@
     <Compile Include="Pathing\Vertex.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="States\Attack.cs" />
+    <Compile Include="States\BaseState.cs" />
+    <Compile Include="States\Rest.cs" />
+    <Compile Include="States\Wander.cs" />
     <Compile Include="View\Texturestorage.cs" />
     <Compile Include="world\World.cs" />
   </ItemGroup>
