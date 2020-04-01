@@ -11,7 +11,7 @@ namespace AAI.States
         {
             t.Behaviours = new List<SteeringBehaviour>()
             {
-                new SeekBehaviour(t)
+                new ArriveBehaviour(t)
             };
         }
 

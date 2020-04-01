@@ -9,19 +9,19 @@ namespace AAI.behaviour
     internal class SeekBehaviour : SteeringBehaviour
     {
         private Vector2 result;
-        public SeekBehaviour(MovingEntity me) : base(me)
+        private Vector2 Target;
+        public SeekBehaviour(MovingEntity me, Vector2 target) : base(me)
         {
+            Target = target;
         }
 
         public override Vector2 Calculate()
         {
-            Vector2 tempTarget      = ME.MyWorld.Target.Pos;
-            Vector2 target          = ME.MyWorld.Target.Pos;
-            Vector2 DesiredVelocity = tempTarget - ME.Pos;
+            Vector2 DesiredVelocity = Target - ME.Pos;
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
-            Console.WriteLine(Vector2.Distance(ME.Pos, target));
-            result = Vector2.Distance(ME.Pos, target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
+            Console.WriteLine(Vector2.Distance(ME.Pos, Target));
+            result = Vector2.Distance(ME.Pos, Target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
             return result;
         }
 

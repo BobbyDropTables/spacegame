@@ -20,10 +20,6 @@ namespace AAI.Entity.staticEntities
                              new Rectangle(
                                            Pos.ToPoint(),
                                            Size.ToPoint()),
-<<<<<<< HEAD
-=======
-
->>>>>>> PathFollowing
                              null,
                              Color.Aqua,
                              0.0f,

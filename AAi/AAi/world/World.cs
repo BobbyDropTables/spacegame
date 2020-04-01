@@ -21,7 +21,6 @@ namespace AAI.world
         public Random Random = new Random();
         public bool DrawGraph { get; set; }
         public  List<BaseGameEntity> walls     = new List<BaseGameEntity>();
-
         public GameMap gameMap { get; }
 
         public World(int w, int h)
@@ -91,8 +90,10 @@ namespace AAI.world
                     var destination = new Vector2(mX, mY);
 
                     if (source != null && destination != null)
-                    {
+                    { 
                         var Path = gameMap.PathingPipeline(source, destination, walls);
+                        var test = (Vehicle) entities[0];
+                        test.Path = Path;
                         if(Path != null)
                             gameMap.commands = Path;
 
