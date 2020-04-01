@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using AAI.behaviour;
 using AAI.Controller;
+using AAI.Pathing;
 using AAI.States;
 using AAI.world;
 using Microsoft.Xna.Framework;
@@ -19,8 +20,8 @@ namespace AAI.Entity.MovingEntities
         public List<SteeringBehaviour> Behaviours;
         public Vector2 Side = new Vector2(1, 0);
         public Vector2 OldPosition;
-        public StateMachine<MovingEntity> StateMachine; 
-
+        public StateMachine<MovingEntity> StateMachine;
+        
 
         public MovingEntity(Vector2 pos, World w) : base(pos, w)
         {
@@ -30,13 +31,12 @@ namespace AAI.Entity.MovingEntities
             Maxturn  = 0.00001f;
             Velocity = new Vector2();
             MaxForce = 0.0005f;
-            StateMachine = new StateMachine<MovingEntity>(this);
-            StateMachine.State = new Attack();
+            
         }
 
         public override void Update()
         {
-            StateMachine.Update();
+            //StateMachine.Update();
             Vector2 steeringForce = new Vector2();
             // Apply all behaviours
             foreach (var behaviour in Behaviours)
