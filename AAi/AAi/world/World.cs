@@ -58,6 +58,12 @@ namespace AAI.world
                     new Vector2(0, 0 + gameMap.TILE_SIZE),
                     this, Color.Blue
                 ),
+                new Wall(new Vector2(0, 0),
+                         new Vector2(Width, 0 ),
+                         new Vector2(Width, 10),
+                         new Vector2(0, 10),
+                         this, Color.Blue
+                        ),
             };
             foreach (Wall wall in Walls)
                 walls.Add(wall);

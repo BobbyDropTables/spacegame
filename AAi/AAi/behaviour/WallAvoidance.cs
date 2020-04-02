@@ -1,12 +1,9 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Linq;
 using AAI.Entity;
 using AAI.Entity.MovingEntities;
 using AAI.Entity.staticEntities;
 using AAI.View;
-using AAI.world;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,10 +11,11 @@ namespace AAI.behaviour
 {
     internal class WallAvoidance : SteeringBehaviour
     {
-        private readonly float         _feelerLength;
-        private Vector2 feeler;
-        private          MovingEntity  _parent;
-        private Vector2 steeringForce;
+        private readonly float        _feelerLength;
+        private          MovingEntity _parent;
+        private          Vector2      feeler;
+        private          Vector2      steeringForce;
+        private Vector2 transformed;
 
         public WallAvoidance(MovingEntity me, float feelerLength) : base(me)
         {
@@ -26,75 +24,90 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-            // Create feeler first
-            feeler = ME.Pos + _feelerLength * ME.Velocity;
+            feeler = ME.Pos + _feelerLength * ME.Heading;
             steeringForce = new Vector2(0, 0);
-            float distToThisIP    = 0.0f;
-            float distToClosestIP = float.MaxValue;
-
-            // This will hold an index into the vector of walls
-            int closestWall = -1;
-
-            // Some vectors for returning steerforce and temporary vectors
-            
-            Vector2 point         = new Vector2(0, 0);
-
-            // Examine each feeler in turn
             List<BaseGameEntity> staticEntities = ME.MyWorld.walls;
-                // Run through walls
-                for (int wall = 0; wall < staticEntities.Count; wall++)
+            // Run through walls
+            foreach (Wall w in staticEntities)
+                // Check for intersection
+                if (w.Intersects(ME.Pos, feeler))
                 {
-                    // Check for intersection
-                    if (LineIntersection2D(ME.Pos,
-                                           feeler,
-                                           ((Wall) staticEntities[wall]).Start,
-                                           ((Wall) staticEntities[wall]).End,
-                                           ref distToThisIP, ref point))
-                    {
-                        //Is this closest found so far? If so keep record
-                        if (distToThisIP < distToClosestIP)
+                    //get all intersectslines
+                    List<Line> intersectsline = w.getIntersectsline(ME.Pos, feeler);
+                    //Is this closest found so far? If so keep record
+                    Vector2 closestVector2 = new Vector2(int.MaxValue, int.MaxValue);
+                    Line    closestLine    = new Line(new Vector2(), new Vector2());
+                    foreach (Line line in intersectsline)
+                        if (Vector2.Distance(ME.Pos, line.first) > Vector2.Distance(ME.Pos, line.second))
                         {
-                            distToClosestIP = distToThisIP;
-                            closestWall     = wall;
+                            if (Vector2.Distance(ME.Pos, closestVector2) > Vector2.Distance(ME.Pos, line.first))
+                            {
+                                closestVector2 = line.first;
+                                closestLine    = line;
+                            }
                         }
-                    }
-
-                    // If intersect detected calculate a force to steer away
-                    if (closestWall >= 0)
-                    {
-                        // Create a force in the direction of the wall normal, with a magnitude of the overshoot
-                        Vector2 temp = Vector2.Normalize(((Wall)staticEntities[closestWall]).End -
-                                                         ((Wall)staticEntities[closestWall]).Start);
-                        Vector2 normal = new Vector2(0, 0)
+                        else
                         {
-                            X = -temp.Y,
-                            Y = temp.X,
-                        };
-                        //steeringForce = normal * OverShoot;
-                        steeringForce = 3.0f * (-2 * (Vector2.Dot(ME.Velocity, normal)) * normal + ME.Velocity);
+                            if (Vector2.Distance(ME.Pos, closestVector2) > Vector2.Distance(ME.Pos, line.second))
+                            {
+                                closestVector2 = line.second;
+                                closestLine    = line;
+                            }
+                        }
 
-                    }
-            }
-            
-            return steeringForce;
+                    // Create a force in the direction of the wall normal, with a magnitude of the overshoot
+                    Vector2 temp = Vector2.Normalize(closestLine.first - closestLine.second);
+                    Vector2 normal = new Vector2(0, 0)
+                    {
+                        X = -temp.Y,
+                        Y = temp.X
+                    };
+                    //steeringForce = normal * OverShoot;
+                    steeringForce = 3.0f * (-2 * Vector2.Dot(ME.Velocity, normal) * normal + ME.Velocity);
+                    return steeringForce;
+                }
+
+            return new Vector2(0, 0);
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)
         {
-            var Start = ME.Pos;
-            var End   = ME.Pos + steeringForce * scale;
+            Vector2 Start = ME.Pos;
+            Vector2 End   = feeler;
             Console.WriteLine("Start:{0}\tEnd:{1}", Start, End);
             Vector2 edge = End - Start;
             // calculate angle to rotate line
             float angle =
-                (float)Math.Atan2(edge.Y, edge.X);
-            var Texture = TextureStorage.Textures["Line"];
-            var origin  = new Vector2(0);
+                (float) Math.Atan2(edge.Y, edge.X);
+            Texture2D Texture = TextureStorage.Textures["Line"];
+            Vector2   origin  = new Vector2(0);
             spriteBatch.Draw(Texture,
                              new Rectangle(
-                                           (int)Start.X,
-                                           (int)Start.Y,
-                                           (int)edge.Length(),
+                                           (int) Start.X,
+                                           (int) Start.Y,
+                                           (int) edge.Length(),
+                                           1),
+                             null,
+                             Color.Yellow,
+                             angle,
+                             new Vector2(0, 0.5f),
+                             SpriteEffects.None,
+                             0);
+
+
+            Start = ME.Pos;
+            End   = ME.Pos + steeringForce * scale;
+            Console.WriteLine("Start:{0}\tEnd:{1}", Start, End);
+            edge = End - Start;
+            // calculate angle to rotate line
+            angle =
+                (float) Math.Atan2(edge.Y, edge.X);
+            origin = new Vector2(0);
+            spriteBatch.Draw(Texture,
+                             new Rectangle(
+                                           (int) Start.X,
+                                           (int) Start.Y,
+                                           (int) edge.Length(),
                                            1),
                              null,
                              Color.Yellow,
@@ -117,7 +130,7 @@ namespace AAI.behaviour
             if (Bot == 0) //parallel
                 return false;
 
-            float invBot = 1.0f  / Bot;
+            float invBot = 1.0f / Bot;
             float r      = rTop * invBot;
             float s      = sTop * invBot;
 

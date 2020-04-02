@@ -11,8 +11,8 @@ namespace AAI.Entity.MovingEntities
 {
     class Vehicle : MovingEntity
     {
-        public          Texture2D Texture;
-        public bool target { get; set; }
+        public Texture2D   Texture;
+        public bool        target { get; set; }
         public Queue<Edge> Path;
 
         public Vehicle(Vector2 pos, World w) : base(pos, w)
@@ -20,19 +20,19 @@ namespace AAI.Entity.MovingEntities
             //StateMachine = new StateMachine<MovingEntity>(this);
             //StateMachine.State = new Attack();
             Velocity = new Vector2(0, 0);
-            target = false;
+            target   = false;
 
             Behaviours = new List<SteeringBehaviour>
             {
-                new PathFollowing(this),
-                //new ArriveBehaviour(this),
+                //new PathFollowing(this),
+                new ArriveBehaviour(this),
                 //new WanderBehaviour(this,90,100),
-                //new WallAvoidance(this, 15),
+                new WallAvoidance(this, 15),
             };
 
         }
 
-		public override void Render(SpriteBatch spriteBatch)
+        public override void Render(SpriteBatch spriteBatch)
         {
             Texture = TextureStorage.Textures["Arrow"];
             var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
@@ -47,6 +47,7 @@ namespace AAI.Entity.MovingEntities
                              origin,
                              SpriteEffects.None,
                              0f);
+            Behaviours[1].DebugDraw(spriteBatch, 10);
         }
     }
 }

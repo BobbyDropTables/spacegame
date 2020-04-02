@@ -38,6 +38,7 @@ namespace AAI.Entity.staticEntities
             lines[2] = new Line(third, fourth);
             lines[3] = new Line(fourth, first);
 
+            _color = color;
         }
 
         public bool Intersects(Vector2 first, Vector2 second)
@@ -48,19 +49,34 @@ namespace AAI.Entity.staticEntities
                 {
                     Console.WriteLine("LINE INTERSECTS WITH OBJECT AT: " + line.first + ", " + line.second);
                     Console.WriteLine("FROM ENTITY: " + first + ", " + second);
-                    
+
                     return true;
                 }
             }
-
             return false;
+        }
+
+        public List<Line> getIntersectsline(Vector2 first, Vector2 second)
+        {
+            List<Line> intersectLines = new List<Line>();
+            foreach (var line in lines)
+            {
+                if (GameMap.LineIntersection2D(line.first, line.second, first, second))
+                {
+                    Console.WriteLine("LINE INTERSECTS WITH OBJECT AT: " + line.first + ", " + line.second);
+                    Console.WriteLine("FROM ENTITY: " + first + ", " + second);
+
+                    intersectLines.Add(line); ;
+                }
+            }
+            return intersectLines;
         }
 
         public bool IsWithin(Vector2 pos)
         {
             int x1 = (int)lines[0].first.X;
             int x2 = (int)lines[0].second.X;
-            int y1 = (int) lines[3].second.Y;
+            int y1 = (int)lines[3].second.Y;
             int y2 = (int)lines[3].first.Y;
 
             if ((pos.X >= x1 && pos.X <= x2) && (pos.Y >= y1 && pos.Y <= y2))
@@ -71,6 +87,9 @@ namespace AAI.Entity.staticEntities
 
         public override void Render(SpriteBatch spriteBatch)
         {
+            //spriteBatch.Draw(TextureStorage.Textures["Pixel"], new Rectangle((int)lines[0].first.X, (int)lines[0].first.Y, (int)lines[2].first.X, (int)lines[2].first.Y),
+            //                 _color);
+            ////spriteBatch.Draw(TextureStorage.Textures["Pixel"], lines[0].first, new Rectangle(lines[0].first,) );
             foreach (var line in lines)
             {
                 Graph.DrawLine(spriteBatch, line.first, line.second, this._color);
