@@ -156,7 +156,7 @@ namespace AAI
             {
                 result.Enqueue(edge);
             }
-            Console.WriteLine("V: " + vertices.Count + ", E: " + result.Count);
+            //Console.WriteLine("V: " + vertices.Count + ", E: " + result.Count);
             return result;
         }
 

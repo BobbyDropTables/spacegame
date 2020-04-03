@@ -41,6 +41,7 @@ namespace AAI
         {
             if(!IsWithinIndexBounds(x, y))
             {
+                
                 Console.WriteLine("GetVertex: Out of bounds. [x: " + x + ", y: " + y + "]");
                 return null;
             }
@@ -247,7 +248,7 @@ namespace AAI
         
             Texture2D Pixel = TextureStorage.Textures["Pixel"];
         
-            spriteBatch.Draw(Pixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0);
+            spriteBatch.Draw(Pixel, r, null, color, angle, Vector2.Zero, SpriteEffects.None, 0.9f);
         }
 
     }

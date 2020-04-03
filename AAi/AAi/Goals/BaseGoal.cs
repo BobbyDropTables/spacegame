@@ -12,7 +12,7 @@ namespace AAI.Goals
 
     public abstract class BaseGoal
     {
-        protected Vehicle Vehicle;
+        protected SmartEntity smartEntity;
         public Statusgoal State;
         public string Name;
         public abstract void Activate();

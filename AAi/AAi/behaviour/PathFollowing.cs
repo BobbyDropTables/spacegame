@@ -9,27 +9,26 @@ namespace AAI.behaviour
 {
     internal class PathFollowing : SteeringBehaviour
     {
-        private readonly Vehicle vehicle;
-
         private Edge edge =
             new Edge(new Vertex(0, 0, new Vector2(0, 0)), new Vertex(0, 0, new Vector2(0, 0)), 0.0);
 
+        private Queue<Edge> Path;
         private Queue<Edge> OldPath;
         private bool        start;
         private int         switchcase;
         private Vector2     target;
-        public bool finished = false;
+        public bool Finished = false;
 
-        public PathFollowing(Vehicle me) : base(me)
+        public PathFollowing(SmartEntity me, Queue<Edge> path) : base(me)
         {
-            vehicle = me;
             target  = me.Pos;
+            Path = path;
         }
 
         public override Vector2 Calculate()
         {
             if (start)
-                if (vehicle.Path != OldPath)
+                if (Path != OldPath)
                     update();
 
             SeekBehaviour seek = new SeekBehaviour(ME, target);
@@ -40,18 +39,18 @@ namespace AAI.behaviour
 
         private void update()
         {
-            if (vehicle.Path != null)
+            if (Path != null)
             {
-                if (vehicle.Path == OldPath)
+                if (Path == OldPath)
                 {
-                    if (switchcase >= vehicle.Path.Count)
+                    if (switchcase >= Path.Count)
                     {
                         target = edge.destination.position;
-                        finished = true;
+                        Finished = true;
                     }
                     else
                     {
-                        Edge[] targetlist = vehicle.Path.ToArray();
+                        Edge[] targetlist = Path.ToArray();
                         edge   = targetlist[switchcase];
                         target = edge.destination.position;
                         switchcase++;
@@ -59,13 +58,13 @@ namespace AAI.behaviour
                 }
                 else
                 {
-                    OldPath    = vehicle.Path;
+                    OldPath    = Path;
                     switchcase = 0;
-                    Edge[] targetlist = vehicle.Path.ToArray();
+                    Edge[] targetlist = Path.ToArray();
                     edge   = targetlist[switchcase];
                     target = edge.destination.position;
                     start  = true;
-                    finished = false;
+                    Finished = false;
                 }
             }
             else
@@ -78,7 +77,16 @@ namespace AAI.behaviour
 
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)
         {
-            throw new NotImplementedException();
+            if (Path != null)
+            {
+                foreach (var current in Path)
+                {
+                    current.Draw(spriteBatch);
+                    current.source.DrawVertex(spriteBatch);
+                    current.destination.DrawVertex(spriteBatch);
+
+                }
+            }
         }
     }
 }

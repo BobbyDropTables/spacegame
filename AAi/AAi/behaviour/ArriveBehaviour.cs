@@ -1,5 +1,6 @@
 ﻿using System;
 using AAI.Entity.MovingEntities;
+using AAI.Entity.staticEntities;
 using AAI.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,13 +10,15 @@ namespace AAI.behaviour
     internal class ArriveBehaviour : SteeringBehaviour
     {
         private Vector2 desiredVelocity;
-        public ArriveBehaviour(MovingEntity me) : base(me)
+        private Vector2 Target;
+        public ArriveBehaviour(MovingEntity me, Vector2 target) : base(me)
         {
+            Target = target;
         }
 
         public override Vector2 Calculate()
         {
-            Vector2 toTarget = ME.MyWorld.Target.Pos - ME.Pos;
+            Vector2 toTarget = Target - ME.Pos;
             //calculate the distance to the target position
             float dist = toTarget.Length();
             if (dist > 0)

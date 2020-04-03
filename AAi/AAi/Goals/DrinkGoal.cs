@@ -5,18 +5,18 @@ using Microsoft.Xna.Framework;
 
 namespace AAI.Goals
 {
-    internal class EatGoal : CompositeGoal
+    internal class DrinkGoal : CompositeGoal
     {
-        private          int    i;
         private readonly Target Target;
+        private          int    i;
 
-        public EatGoal(SmartEntity smartEntity, Target target)
+        public DrinkGoal(SmartEntity smartEntity, Target target)
         {
-            i       = 0;
-            State   = Statusgoal.inactive;
+            i                = 0;
+            State            = Statusgoal.inactive;
             this.smartEntity = smartEntity;
-            Target  = target;
-            Name    = "Eating";
+            Target           = target;
+            Name             = "Drinking";
         }
 
         public override void Activate()
@@ -37,17 +37,16 @@ namespace AAI.Goals
 
                     //count how many times this is reached
                     i++;
-                    //is it more then 10 continue
-                    if (i > 100)
+                    //is it more then 50 continue
+                    if (i > 50)
                     {
-                        if (smartEntity.hunger >= 10)
-                            smartEntity.hunger -= 10;
+                        if (smartEntity.thirst >= 10)
+                            smartEntity.thirst -= 10;
                         else
-                            smartEntity.hunger = 0;
+                            smartEntity.thirst = 0;
                         State = Statusgoal.completed;
                     }
                 }
-
             return State;
         }
     }

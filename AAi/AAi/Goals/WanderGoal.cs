@@ -1,43 +1,47 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Security.Cryptography.X509Certificates;
-//using AAI.behaviour;
-//using AAI.Entity.MovingEntities;
-//using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using AAI.behaviour;
+using AAI.Entity.MovingEntities;
+using Microsoft.Xna.Framework;
 
-//namespace AAI.Goals
-//{
-//    public class WanderGoal : BaseGoal
-//    {
-//        private int x;
-//        public void Activate(MovingEntity t)
-//        {
-//            x = 0;
-//            t.Behaviours = new List<SteeringBehaviour>()
-//            {
-//                new WanderBehaviour(t,20,20),
-//                new WallAvoidance(t,20),
-//            };
-//            t.Velocity = new Vector2();
-//        }
+namespace AAI.Goals
+{
+    public class WanderGoal : CompositeGoal
+    {
+        private int i;
 
-//        public int Procces(MovingEntity t)
-//        {
-//            var distance = t.Pos - t.MyWorld.Target.Pos;
+        public WanderGoal(SmartEntity smartEntity)
+        {
+            i       = 0;
+            State   = Statusgoal.inactive;
+            this.smartEntity = smartEntity;
+            Name    = "Wandering";
+        }
 
-//            if (x < 500)
-//            {
-//                x++;
-//            }
-//            else if (distance.Length() < 300)
-//            {
-//                t.StateMachine.Changestate(new EatGoal());
-//            }
-//            throw new NotImplementedException();
-//        }
+        public override void Activate()
+        {
+            i     = 0;
+            State = Statusgoal.active;
+            smartEntity.Behaviours = new List<SteeringBehaviour>
+            {
+                new WanderBehaviour(smartEntity, 30,100),
+                new WallAvoidance(smartEntity,15),
+            };
+        }
 
-//        public void Terminate(MovingEntity t)
-//        {
-//        }
-//    }
-//}
+        public override Statusgoal Process()
+        {
+            if (State == Statusgoal.inactive)
+                Activate();
+
+            //count how many times this is reached
+            i++;
+            //is it more then 10 continue
+            if (i > 100)
+            {
+                State = Statusgoal.completed;
+            }
+
+            return State;
+        }
+    }
+}

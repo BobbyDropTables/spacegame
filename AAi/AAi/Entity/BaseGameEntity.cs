@@ -11,7 +11,7 @@ namespace AAI.Entity
         public Vector2 Size { get; set; }
         public World MyWorld { get; set; }
         public Texture2D Texture;
-
+        public bool debug = false;
         protected BaseGameEntity(Vector2 pos, World w)
         {
             Pos = pos;
@@ -28,7 +28,7 @@ namespace AAI.Entity
 
             Texture = TextureStorage.Textures["Target"];
             spriteBatch.Draw(Texture,
-                             new Rectangle((int)Pos.X, (int)Pos.Y, 100, 100),
+                             new Rectangle((int)Pos.X, (int)Pos.Y, (int) Size.X, (int) Size.Y),
                              null,
                              Color.White);
         }

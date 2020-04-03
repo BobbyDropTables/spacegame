@@ -45,6 +45,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="behaviour\PathFollowing.cs" />
+    <Compile Include="Entity\MovingEntities\SmartEntity.cs" />
+    <Compile Include="Goals\DrinkGoal.cs" />
+    <Compile Include="Goals\GoDrinkGoal.cs" />
+    <Compile Include="Goals\GoSleepGoal.cs" />
+    <Compile Include="Goals\SleepGoal.cs" />
     <Compile Include="Goals\Think.cs" />
     <Compile Include="Pathing\AStarSearch.cs" />
     <Compile Include="behaviour\ArriveBehaviour.cs" />
@@ -56,9 +61,9 @@
     <Compile Include="Entity\BaseGameEntity.cs" />
     <Compile Include="FpsCounter.cs" />
     <Compile Include="Entity\MovingEntities\MovingEntity.cs" />
-    <Compile Include="Entity\MovingEntities\Vehicle.cs" />
+    <Compile Include="Entity\MovingEntities\Robot.cs" />
     <Compile Include="Entity\staticEntities\StaticEntity.cs" />
-    <Compile Include="Entity\staticEntities\Target.cs" />
+    <Compile Include="Entity\Target.cs" />
     <Compile Include="Entity\staticEntities\Wall.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GameMap.cs" />

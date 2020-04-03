@@ -11,9 +11,9 @@ namespace AAI.Goals
     {
         private int _y;
 
-        public Think(Vehicle vehicle)
+        public Think(SmartEntity smartEntity)
         {
-            Vehicle = vehicle;
+            this.smartEntity = smartEntity;
             Name     = "Think";
             SubGoals = new List<CompositeGoal>();
         }
@@ -22,7 +22,7 @@ namespace AAI.Goals
         {
             SubGoals = new List<CompositeGoal>();
             State = Statusgoal.active;
-            Vehicle.SelectGoal();
+            smartEntity.SelectGoal();
         }
 
         public override Statusgoal Process()
@@ -33,8 +33,6 @@ namespace AAI.Goals
             // If everything is done -> activate again
             if (processState == Statusgoal.completed)
             {
-                Random random = new Random();
-                Vehicle.MyWorld.food.Pos = new Vector2(random.Next(20, 1260), random.Next(20, 940));
                 Activate();
             }
                 
@@ -52,7 +50,7 @@ namespace AAI.Goals
         {
             _y += 24;
             var font = TextureStorage.Fonts["Font"];
-            spriteBatch.DrawString(font, currentGoal.Name, new Vector2(Vehicle.Pos.X + depth * 6, Vehicle.Pos.Y +_y), currentGoal.State == Statusgoal.active ? Color.Green : Color.Black);
+            spriteBatch.DrawString(font, currentGoal.Name, new Vector2(smartEntity.Pos.X + depth * 6, smartEntity.Pos.Y +_y), currentGoal.State == Statusgoal.active ? Color.Green : Color.Black);
 
             var compositeGoal = currentGoal as CompositeGoal;
 

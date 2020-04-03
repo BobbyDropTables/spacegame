@@ -28,7 +28,7 @@ namespace AAI.behaviour
             float  cos    = (float) Math.Cos(MathHelper.ToDegrees(randomdeg));
 
             float tx = wanderRadius;
-            int   ty = 0;
+            int   ty = 3;
 
             Vector2 rotate = new Vector2(cos * tx - sin * ty, sin * tx + cos * ty);
 

@@ -9,18 +9,18 @@ namespace AAI.behaviour
     internal class FleeBehaviour : SteeringBehaviour
     {
         private Vector2 result;
-        public FleeBehaviour(MovingEntity me) : base(me)
+        private Vector2 target;
+        public FleeBehaviour(MovingEntity me, Vector2 target) : base(me)
         {
+            this.target = target;
         }
 
         public override Vector2 Calculate()
         {
             Vector2 tempPos         = ME.Pos;
-            Vector2 target          = ME.MyWorld.Target.Pos;
             Vector2 DesiredVelocity = tempPos - target;
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
-            Console.WriteLine(Vector2.Distance(ME.Pos, target));
             result = Vector2.Distance(ME.Pos, target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
             return result;
         }

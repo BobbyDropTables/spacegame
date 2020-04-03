@@ -12,11 +12,8 @@ namespace AAI.behaviour
     internal class WallAvoidance : SteeringBehaviour
     {
         private readonly float        _feelerLength;
-        private          MovingEntity _parent;
         private          Vector2      feeler;
         private          Vector2      steeringForce;
-        private Vector2 transformed;
-
         public WallAvoidance(MovingEntity me, float feelerLength) : base(me)
         {
             _feelerLength = feelerLength;
@@ -74,7 +71,7 @@ namespace AAI.behaviour
         {
             Vector2 Start = ME.Pos;
             Vector2 End   = feeler;
-            Console.WriteLine("Start:{0}\tEnd:{1}", Start, End);
+            //Console.WriteLine("Start:{0}\tEnd:{1}", Start, End);
             Vector2 edge = End - Start;
             // calculate angle to rotate line
             float angle =
@@ -97,7 +94,6 @@ namespace AAI.behaviour
 
             Start = ME.Pos;
             End   = ME.Pos + steeringForce * scale;
-            Console.WriteLine("Start:{0}\tEnd:{1}", Start, End);
             edge = End - Start;
             // calculate angle to rotate line
             angle =

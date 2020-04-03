@@ -8,15 +8,15 @@ namespace AAI.Goals
     internal class PathFollowingGoal : CompositeGoal
     {
         private          int           i;
-        private readonly PathFollowing PathFollowing;
+        private  PathFollowing PathFollowing;
         private readonly Target        Target;
 
-        public PathFollowingGoal(Vehicle vehicle, Target target)
+        public PathFollowingGoal(SmartEntity smartEntity, Target target)
         {
             i             = 0;
             State = Statusgoal.inactive;
-            Vehicle       = vehicle;
-            PathFollowing = new PathFollowing(Vehicle);
+            this.smartEntity = smartEntity;
+            
             Name          = "Pathfollowing";
             Target        = target;
         }
@@ -24,11 +24,12 @@ namespace AAI.Goals
         public override void Activate()
         {
             State = Statusgoal.active;
-            Vehicle.Path = Vehicle.MyWorld.gameMap.PathingPipeline(Vehicle.Pos, Target.Pos, Vehicle.MyWorld.walls);
-            Vehicle.Behaviours = new List<SteeringBehaviour>
+            var Path = smartEntity.MyWorld.gameMap.PathingPipeline(smartEntity.Pos, Target.Pos, smartEntity.MyWorld.walls);
+            PathFollowing = new PathFollowing(smartEntity , Path);
+            smartEntity.Behaviours = new List<SteeringBehaviour>
             {
                 PathFollowing,
-                new WallAvoidance(Vehicle, 15)
+                new WallAvoidance(smartEntity,15),
             };
         }
 
@@ -37,7 +38,7 @@ namespace AAI.Goals
             if (State == Statusgoal.inactive)
                 Activate();
             //check if Path is complete
-            if (PathFollowing.finished)
+            if (PathFollowing.Finished)
                 State = Statusgoal.completed;
 
             return State;
