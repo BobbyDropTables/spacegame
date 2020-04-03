@@ -52,7 +52,6 @@ namespace AAI
             spriteBatch = new SpriteBatch(GraphicsDevice);
             textureStorage.LoadTextures();
             font = Content.Load<SpriteFont>("Font");
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>

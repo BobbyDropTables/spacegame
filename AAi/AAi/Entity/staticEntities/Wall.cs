@@ -87,9 +87,6 @@ namespace AAI.Entity.staticEntities
 
         public override void Render(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(TextureStorage.Textures["Pixel"], new Rectangle((int)lines[0].first.X, (int)lines[0].first.Y, (int)lines[2].first.X, (int)lines[2].first.Y),
-            //                 _color);
-            ////spriteBatch.Draw(TextureStorage.Textures["Pixel"], lines[0].first, new Rectangle(lines[0].first,) );
             foreach (var line in lines)
             {
                 Graph.DrawLine(spriteBatch, line.first, line.second, this._color);

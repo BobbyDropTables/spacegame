@@ -15,6 +15,7 @@ namespace AAI.world
     public class World
     {
         public           Target               Target { get; set; }
+        public Target food { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
         public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
@@ -37,6 +38,7 @@ namespace AAI.world
         private void populate()
         {
             Target = new Target(new Vector2(500, 300), this);
+            food = new Target(new Vector2(500, 300), this);
             for (int i = 0; i < 1; i++)
             {
                 Vehicle v = new Vehicle(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this);
@@ -115,7 +117,7 @@ namespace AAI.world
                 
             }
 
-            // Poll for current keyboard state
+            // Poll for current keyboard goal
             KeyboardState state = Keyboard.GetState();
 
             // If they hit esc, exit
