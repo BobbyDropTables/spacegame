@@ -10,7 +10,7 @@ namespace AAI.behaviour
     {
         private Vector2 result;
         private Vector2 target;
-        public FleeBehaviour(MovingEntity me, Vector2 target) : base(me)
+        public FleeBehaviour(MovingEntity me, Vector2 target,float force=1f) : base(me,force)
         {
             this.target = target;
         }

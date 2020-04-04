@@ -25,6 +25,7 @@ namespace AAI.Goals
             {
                 new WanderBehaviour(smartEntity, 30,100),
                 new WallAvoidance(smartEntity,15),
+                new SeperationBehaviour(smartEntity)
             };
         }
 

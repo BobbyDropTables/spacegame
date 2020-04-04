@@ -15,18 +15,22 @@ namespace AAI.Entity.MovingEntities
         public float MaxSpeed;
         public List<SteeringBehaviour> Behaviours;
         public Vector2 OldPosition;
-        
+        public bool IsTagged;
+        public int Radius;
+
+
 
         public MovingEntity(Vector2 pos, World w) : base(pos, w)
         {
             MaxSpeed = 2f;
+            Radius = 100;
             Velocity = new Vector2();
         }
 
         public override void Update()
         {
             OldPosition = Pos;
-            //StateMachine.Update();
+            TagNeighbors(this, MyWorld.MovingEntities, Radius);
             Vector2 steeringForce = new Vector2();
             // Apply all behaviours
             foreach (var behaviour in Behaviours)
@@ -57,6 +61,28 @@ namespace AAI.Entity.MovingEntities
                 {
                     Pos = OldPosition;
                 } 
+            }
+        }
+
+        // Tag neighbors for flocking
+        private void TagNeighbors(MovingEntity entity, List<MovingEntity> listOfEntities, double radius)
+        {
+            // Loop through every entity in game
+            foreach (var e in listOfEntities)
+            {
+                // Clear all tags
+                e.IsTagged = false;
+
+                Vector2 to = e.Pos- entity.Pos;
+
+                // The bounding radius of the other is taken into account by adding it to the range
+                double range = radius + e.Radius;
+
+                // If entity is within range, tag for further considerations
+                if (e != entity && to.LengthSquared() < range * range)
+                {
+                    e.IsTagged = true;
+                }
             }
         }
 

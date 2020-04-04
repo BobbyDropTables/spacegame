@@ -24,7 +24,8 @@ namespace AAI.Entity.MovingEntities
             Behaviours = new List<SteeringBehaviour>
             {
                 new WanderBehaviour(this, 90, 150),
-                new WallAvoidance(this, 15)
+                new WallAvoidance(this, 15),
+                new SeperationBehaviour(this),
             };
         }
 

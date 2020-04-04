@@ -14,7 +14,7 @@ namespace AAI.behaviour
         private readonly float        _feelerLength;
         private          Vector2      feeler;
         private          Vector2      steeringForce;
-        public WallAvoidance(MovingEntity me, float feelerLength) : base(me)
+        public WallAvoidance(MovingEntity me, float feelerLength, float force = 5f) : base(me, force)
         {
             _feelerLength = feelerLength;
         }
@@ -61,7 +61,7 @@ namespace AAI.behaviour
                     };
                     //steeringForce = normal * OverShoot;
                     steeringForce = 3.0f * (-2 * Vector2.Dot(ME.Velocity, normal) * normal + ME.Velocity);
-                    return steeringForce;
+                    return steeringForce*Force;
                 }
 
             return new Vector2(0, 0);

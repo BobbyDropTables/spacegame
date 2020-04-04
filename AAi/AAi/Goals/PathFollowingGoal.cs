@@ -30,6 +30,7 @@ namespace AAI.Goals
             {
                 PathFollowing,
                 new WallAvoidance(smartEntity,15),
+                new SeperationBehaviour(smartEntity),
             };
         }
 

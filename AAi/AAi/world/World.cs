@@ -20,7 +20,7 @@ namespace AAI.world
         public Target bed { get; set; }
         public           int                  Width  { get; set; }
         public           int                  Height { get; set; }
-        public  List<BaseGameEntity> entities  = new List<BaseGameEntity>();
+        public  List<MovingEntity> MovingEntities  = new List<MovingEntity>();
         public Random Random = new Random();
         public bool DrawGraph { get; set; }
         public  List<BaseGameEntity> walls     = new List<BaseGameEntity>();
@@ -44,15 +44,16 @@ namespace AAI.world
             bed = new Target(new Vector2(1100, 100), this);
 
             //create robot
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 50; i++)
             {
                 Robot v = new Robot(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this, i.ToString());
-                entities.Add(v);
+                MovingEntities.Add(v);
             }
+            //create smart entities
             for (int i = 0; i < 3; i++)
             {
                 SmartEntity v = new SmartEntity(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this, i.ToString());
-                entities.Add(v);
+                MovingEntities.Add(v);
             }
 
             //create all walls
@@ -157,7 +158,7 @@ namespace AAI.world
             if (state.IsKeyDown(Keys.E) && isKeyeReset)
             {
                 isKeyeReset = false;
-                foreach (var me in entities)
+                foreach (var me in MovingEntities)
                 {
                     me.debug = !me.debug;
                 }
@@ -178,7 +179,7 @@ namespace AAI.world
             if (state.IsKeyUp(Keys.G) && !isKeyReset)
                 isKeyReset = true;
 
-            foreach (MovingEntity me in entities)
+            foreach (MovingEntity me in MovingEntities)
             {
                 me.Update();
             }
@@ -191,7 +192,7 @@ namespace AAI.world
                 gameMap.Render(spriteBatch);
             }
             walls.ForEach(e => e.Render(spriteBatch));
-            entities.ForEach(e => e.Render(spriteBatch));
+            MovingEntities.ForEach(e => e.Render(spriteBatch));
             food.Render(spriteBatch, TextureStorage.Textures["Food"]);
             water.Render(spriteBatch, TextureStorage.Textures["Whiskey"]);
             bed.Render(spriteBatch, TextureStorage.Textures["Bed"]);

@@ -45,6 +45,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="behaviour\PathFollowing.cs" />
+    <Compile Include="behaviour\SeperationBehaviour.cs" />
     <Compile Include="Entity\MovingEntities\SmartEntity.cs" />
     <Compile Include="Goals\DrinkGoal.cs" />
     <Compile Include="Goals\GoDrinkGoal.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Goals\BaseGoal.cs" />
     <Compile Include="Goals\GoEatGoal.cs" />
     <Compile Include="Goals\PathFollowingGoal.cs" />
-    <Compile Include="Goals\RestGoal.cs" />
     <Compile Include="Goals\WanderGoal.cs" />
     <Compile Include="View\Texturestorage.cs" />
     <Compile Include="world\World.cs" />

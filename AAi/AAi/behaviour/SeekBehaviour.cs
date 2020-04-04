@@ -10,7 +10,7 @@ namespace AAI.behaviour
     {
         private Vector2 result;
         private Vector2 Target;
-        public SeekBehaviour(MovingEntity me, Vector2 target) : base(me)
+        public SeekBehaviour(MovingEntity me, Vector2 target,float force=1f) : base(me,force)
         {
             Target = target;
         }
@@ -21,7 +21,7 @@ namespace AAI.behaviour
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
             result = Vector2.Distance(ME.Pos, Target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
-            return result;
+            return result* Force;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)

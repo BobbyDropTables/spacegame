@@ -19,7 +19,7 @@ namespace AAI.behaviour
         private Vector2     target;
         public bool Finished = false;
 
-        public PathFollowing(SmartEntity me, Queue<Edge> path) : base(me)
+        public PathFollowing(SmartEntity me, Queue<Edge> path, float force = 2f) : base(me, force)
         {
             target  = me.Pos;
             Path = path;

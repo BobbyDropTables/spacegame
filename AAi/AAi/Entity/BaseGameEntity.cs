@@ -23,6 +23,7 @@ namespace AAI.Entity
         {
         }
 
+
         public virtual void Render(SpriteBatch spriteBatch)
         {
 

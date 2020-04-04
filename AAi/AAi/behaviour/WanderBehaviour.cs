@@ -15,7 +15,7 @@ namespace AAI.behaviour
         private Vector2 circlePos;
         private Vector2 target;
 
-        public WanderBehaviour(MovingEntity me, float radius, float distance) : base(me)
+        public WanderBehaviour(MovingEntity me, float radius, float distance, float force=1f) : base(me, force)
         {
             wanderRadius   = radius;
             wanderDistance = distance;
@@ -35,7 +35,7 @@ namespace AAI.behaviour
             circlePos = ME.Pos      + ME.Velocity * wanderDistance;
             target    = circlePos  + rotate;
             result = Vector2.Normalize(target - ME.Pos);
-            return result;
+            return result * Force;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)
