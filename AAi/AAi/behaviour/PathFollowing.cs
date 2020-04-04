@@ -15,7 +15,7 @@ namespace AAI.behaviour
         private Queue<Edge> Path;
         private Queue<Edge> OldPath;
         private bool        start;
-        private int         switchcase;
+        private int         Index;
         private Vector2     target;
         public bool Finished = false;
 
@@ -39,11 +39,14 @@ namespace AAI.behaviour
 
         private void update()
         {
+            //check if Path is not empty
             if (Path != null)
             {
+                //check if Path is the same path as old path
                 if (Path == OldPath)
                 {
-                    if (switchcase >= Path.Count)
+                    //if Path is at last edge 
+                    if (Index >= Path.Count)
                     {
                         target = edge.destination.position;
                         Finished = true;
@@ -51,17 +54,18 @@ namespace AAI.behaviour
                     else
                     {
                         Edge[] targetlist = Path.ToArray();
-                        edge   = targetlist[switchcase];
+                        edge   = targetlist[Index];
                         target = edge.destination.position;
-                        switchcase++;
+                        Index++;
                     }
                 }
+                // Path is a new Path
                 else
                 {
                     OldPath    = Path;
-                    switchcase = 0;
+                    Index = 0;
                     Edge[] targetlist = Path.ToArray();
-                    edge   = targetlist[switchcase];
+                    edge   = targetlist[Index];
                     target = edge.destination.position;
                     start  = true;
                     Finished = false;
@@ -69,6 +73,7 @@ namespace AAI.behaviour
             }
             else
             {
+                //empty path target becomes position of entity
                 edge = new Edge(new Vertex((int) ME.Pos.X / 40, (int) ME.Pos.Y / 40, ME.Pos),
                                 new Vertex((int) ME.Pos.X / 40, (int) ME.Pos.Y / 40, ME.Pos), 0);
                 target = ME.Pos;

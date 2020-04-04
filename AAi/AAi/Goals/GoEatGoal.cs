@@ -36,7 +36,7 @@ namespace AAI.Goals
 
             Statusgoal processState = ProcessAllSubgoals();
 
-            // If everything is done -> activate again
+            // If everything is done -> mark completed
             if (processState == Statusgoal.completed)
                 State = Statusgoal.completed;
             return State;

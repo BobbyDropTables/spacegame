@@ -37,7 +37,7 @@ namespace AAI.Goals
 
                     //count how many times this is reached
                     i++;
-                    //is it less then 1000 continue
+                    //is it more then 1000 continue
                     if (i > 1000)
                     {
                         smartEntity.tiredness = 0;

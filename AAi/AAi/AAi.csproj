@@ -54,7 +54,6 @@
     <Compile Include="Goals\Think.cs" />
     <Compile Include="Pathing\AStarSearch.cs" />
     <Compile Include="behaviour\ArriveBehaviour.cs" />
-    <Compile Include="behaviour\FleeBehaviour.cs" />
     <Compile Include="behaviour\WanderBehaviour.cs" />
     <Compile Include="behaviour\WallAvoidance.cs" />
     <Compile Include="behaviour\SeekBehaviour.cs" />

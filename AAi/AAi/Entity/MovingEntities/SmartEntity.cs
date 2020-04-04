@@ -27,10 +27,12 @@ namespace AAI.Entity.MovingEntities
         public SmartEntity(Vector2 pos, World w, string name) : base(pos, w)
         {
             NAME = name;
-            Velocity = new Vector2(0, 0);
-            hunger = MyWorld.Random.Next(0, 10);
-            thirst = MyWorld.Random.Next(0, 10);
+            // random stats
+            hunger    = MyWorld.Random.Next(0, 10);
+            thirst    = MyWorld.Random.Next(0, 10);
             tiredness = MyWorld.Random.Next(0, 10);
+
+            Velocity = new Vector2(0, 0);
             Think = new Think(this);
             Think.Activate();
             Behaviours = new List<SteeringBehaviour>
@@ -42,6 +44,7 @@ namespace AAI.Entity.MovingEntities
 
         public void SelectGoal()
         {
+            //if stat is over 10 add goal to think else wander
             if (hunger > 10)
                 Think.SubGoals.Add(new GoEatGoal(this, MyWorld.food));
             if (thirst > 10)

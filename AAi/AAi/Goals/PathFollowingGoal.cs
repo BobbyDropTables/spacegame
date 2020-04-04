@@ -24,8 +24,11 @@ namespace AAI.Goals
         public override void Activate()
         {
             State = Statusgoal.active;
+            
+            //create a path
             var Path = smartEntity.MyWorld.gameMap.PathingPipeline(smartEntity.Pos, Target.Pos, smartEntity.MyWorld.walls);
             PathFollowing = new PathFollowing(smartEntity , Path);
+            //set behaviour
             smartEntity.Behaviours = new List<SteeringBehaviour>
             {
                 PathFollowing,

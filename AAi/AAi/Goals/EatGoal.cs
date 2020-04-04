@@ -37,7 +37,7 @@ namespace AAI.Goals
 
                     //count how many times this is reached
                     i++;
-                    //is it more then 10 continue
+                    //is it more then 100 continue
                     if (i > 100)
                     {
                         if (smartEntity.hunger >= 10)

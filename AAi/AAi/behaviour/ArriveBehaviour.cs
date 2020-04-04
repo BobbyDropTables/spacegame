@@ -18,9 +18,10 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-            Vector2 toTarget = Target - ME.Pos;
             //calculate the distance to the target position
+            Vector2 toTarget = Target - ME.Pos;
             float dist = toTarget.Length();
+
             if (dist > 0)
             {
                 float speed = dist / 50;

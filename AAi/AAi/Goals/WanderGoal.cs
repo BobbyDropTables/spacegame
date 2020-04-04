@@ -21,6 +21,7 @@ namespace AAI.Goals
         {
             i     = 0;
             State = Statusgoal.active;
+            //set behaviour
             smartEntity.Behaviours = new List<SteeringBehaviour>
             {
                 new WanderBehaviour(smartEntity, 30,100),
