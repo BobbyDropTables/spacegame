@@ -27,7 +27,7 @@ namespace AAI.behaviour
                 float speed = dist / 50;
                 speed = Math.Min(speed, ME.MaxSpeed);
                 desiredVelocity = toTarget * speed / dist;
-                return desiredVelocity - ME.Velocity;
+                return desiredVelocity - ME.Velocity * Force;
             }
             return new Vector2(0, 0);
         }

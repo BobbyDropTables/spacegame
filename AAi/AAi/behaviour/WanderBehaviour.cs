@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
 using AAI.Entity.MovingEntities;
 using AAI.View;
 using Microsoft.Xna.Framework;
@@ -9,13 +8,11 @@ namespace AAI.behaviour
 {
     internal class WanderBehaviour : SteeringBehaviour
     {
-        private readonly float wanderDistance;
-        private readonly float wanderRadius;
-        private Vector2 result;
-        private Vector2 circlePos;
-        private Vector2 target;
+        private readonly float   wanderDistance;
+        private readonly float   wanderRadius;
+        private          Vector2 result;
 
-        public WanderBehaviour(MovingEntity me, float radius, float distance, float force=1f) : base(me, force)
+        public WanderBehaviour(MovingEntity me, float radius, float distance, float force = 1f) : base(me, force)
         {
             wanderRadius   = radius;
             wanderDistance = distance;
@@ -23,36 +20,35 @@ namespace AAI.behaviour
 
         public override Vector2 Calculate()
         {
-            var randomdeg = ME.MyWorld.Random.Next(0, 360);
-            float  sin    = (float) Math.Sin(MathHelper.ToDegrees(randomdeg));
-            float  cos    = (float) Math.Cos(MathHelper.ToDegrees(randomdeg));
+            int   randomdeg = ME.MyWorld.Random.Next(0, 360);
+            float sin       = (float) Math.Sin(MathHelper.ToDegrees(randomdeg));
+            float cos       = (float) Math.Cos(MathHelper.ToDegrees(randomdeg));
 
             float tx = wanderRadius;
-            int   ty = 3;
+            int   ty = 2;
 
             Vector2 rotate = new Vector2(cos * tx - sin * ty, sin * tx + cos * ty);
-
-            circlePos = ME.Pos      + ME.Velocity * wanderDistance;
-            target    = circlePos  + rotate;
+            Vector2 circlePos = ME.Pos    + ME.Velocity * wanderDistance;
+            Vector2 target    = circlePos + rotate;
             result = Vector2.Normalize(target - ME.Pos);
             return result * Force;
         }
 
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)
         {
-            var Start = ME.Pos;
-            var End   = ME.Pos + result * scale;
-            Vector2 edge = End - Start;
+            Vector2 Start = ME.Pos;
+            Vector2 End   = ME.Pos + result * scale;
+            Vector2 edge  = End    - Start;
             // calculate angle to rotate line
             float angle =
-                (float)Math.Atan2(edge.Y, edge.X);
-            var Texture = TextureStorage.Textures["Line"];
-            var origin  = new Vector2(0);
+                (float) Math.Atan2(edge.Y, edge.X);
+            Texture2D Texture = TextureStorage.Textures["Line"];
+            Vector2   origin  = new Vector2(0);
             spriteBatch.Draw(Texture,
                              new Rectangle(
-                                           (int)Start.X,
-                                           (int)Start.Y,
-                                           (int)edge.Length(),
+                                           (int) Start.X,
+                                           (int) Start.Y,
+                                           (int) edge.Length(),
                                            1),
                              null,
                              Color.Violet,
@@ -60,7 +56,6 @@ namespace AAI.behaviour
                              new Vector2(0, 0.5f),
                              SpriteEffects.None,
                              0);
-            Vector2 size = new Vector2(wanderRadius + wanderRadius);
         }
     }
 }

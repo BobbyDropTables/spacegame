@@ -42,7 +42,7 @@ namespace AAI.behaviour
                                            (int)edge.Length(),
                                            1),
                              null,
-                             Color.Violet,
+                             Color.Blue,
                              angle,
                              new Vector2(0, 0.5f),
                              SpriteEffects.None,

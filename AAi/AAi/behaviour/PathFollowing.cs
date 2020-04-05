@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AAI.Entity.MovingEntities;
 using AAI.Pathing;
+using AAI.View;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,6 +19,7 @@ namespace AAI.behaviour
         private int         Index;
         private Vector2     target;
         public bool Finished = false;
+        private SeekBehaviour seek;
 
         public PathFollowing(SmartEntity me, Queue<Edge> path, float force = 2f) : base(me, force)
         {
@@ -31,7 +33,7 @@ namespace AAI.behaviour
                 if (Path != OldPath)
                     update();
 
-            SeekBehaviour seek = new SeekBehaviour(ME, target);
+            seek = new SeekBehaviour(ME, target);
             if (Vector2.Distance(ME.Pos, target) < 2)
                 update();
             return seek.Calculate();
@@ -89,7 +91,6 @@ namespace AAI.behaviour
                     current.Draw(spriteBatch);
                     current.source.DrawVertex(spriteBatch);
                     current.destination.DrawVertex(spriteBatch);
-
                 }
             }
         }

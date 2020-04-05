@@ -78,18 +78,18 @@ namespace AAI.behaviour
                 (float) Math.Atan2(edge.Y, edge.X);
             Texture2D Texture = TextureStorage.Textures["Line"];
             Vector2   origin  = new Vector2(0);
-            spriteBatch.Draw(Texture,
-                             new Rectangle(
-                                           (int) Start.X,
-                                           (int) Start.Y,
-                                           (int) edge.Length(),
-                                           1),
-                             null,
-                             Color.Yellow,
-                             angle,
-                             new Vector2(0, 0.5f),
-                             SpriteEffects.None,
-                             0);
+            //spriteBatch.Draw(Texture,
+            //                 new Rectangle(
+            //                               (int) Start.X,
+            //                               (int) Start.Y,
+            //                               (int) edge.Length(),
+            //                               1),
+            //                 null,
+            //                 Color.Yellow,
+            //                 angle,
+            //                 new Vector2(0, 0.5f),
+            //                 SpriteEffects.None,
+            //                 0);
 
 
             Start = ME.Pos;

@@ -49,7 +49,7 @@ namespace AAI.Entity.MovingEntities
                
                 foreach (var behaviour in Behaviours)
                 {
-                    behaviour.DebugDraw(spriteBatch,10);
+                    behaviour.DebugDraw(spriteBatch,20);
                 }
             }
         }

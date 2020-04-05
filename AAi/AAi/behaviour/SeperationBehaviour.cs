@@ -38,7 +38,7 @@ namespace AAI.behaviour
         public override void DebugDraw(SpriteBatch spriteBatch, float scale)
         {
             var     Start = ME.Pos;
-            var     End   = ME.Pos + steeringForce * scale;
+            var     End   = ME.Pos + steeringForce * 1000;
             Vector2 edge  = End    - Start;
             // calculate angle to rotate line
             float angle =
@@ -56,7 +56,7 @@ namespace AAI.behaviour
                              angle,
                              new Vector2(0, 0.5f),
                              SpriteEffects.None,
-                             0);
+                             0f);
         }
     }
 }
