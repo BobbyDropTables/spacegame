@@ -37,72 +37,117 @@ namespace AAI.world
             gameMap.FloodFill(walls);
         }
 
+        public Vector2 RandomVector2inmap()
+        {
+            Vector2 Vector2 = new Vector2(Random.Next(20, 1260), Random.Next(20, 940));
+            foreach (Wall wall in walls)
+            {
+                if (wall.IsWithin(Vector2))
+                {
+                    return RandomVector2inmap();
+                }
+            }
+
+            return Vector2;
+        }
+
         private void populate()
         {
-            food = new Target(new Vector2(300, 300), this);
+            food = new Target(new Vector2(180, 60), this);
             water = new Target(new Vector2(1100, 800), this);
-            bed = new Target(new Vector2(1100, 100), this);
-
-            //create robot
-            for (int i = 0; i < 50; i++)
-            {
-                Robot v = new Robot(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this, i.ToString());
-                MovingEntities.Add(v);
-            }
-            //create smart entities
-            for (int i = 0; i < 3; i++)
-            {
-                SmartEntity v = new SmartEntity(new Vector2(Random.Next(20, 1260), Random.Next(20, 940)), this, i.ToString());
-                MovingEntities.Add(v);
-            }
+            bed = new Target(new Vector2(1200, 200), this);
 
             //create all walls
             List<Wall> Walls = new List<Wall>
             {
-                new Wall(new Vector2(520, 520), 
-                    new Vector2(520 + (gameMap.TILE_SIZE * 4), 520 ), 
-                    new Vector2(520 + (gameMap.TILE_SIZE * 4), 520 + gameMap.TILE_SIZE),
-                    new Vector2(520, 520 + gameMap.TILE_SIZE),
-                    this, Color.Blue
-                    ),
-                new Wall(new Vector2(0, 0),
-                    new Vector2(0 + (gameMap.TILE_SIZE * 4), 0 ),
-                    new Vector2(0 + (gameMap.TILE_SIZE * 4), 0 + gameMap.TILE_SIZE),
-                    new Vector2(0, 0 + gameMap.TILE_SIZE),
-                    this, Color.Blue
-                ),
-
                 // border walls
                 new Wall(new Vector2(0, 0),
-                         new Vector2(Width-10, 0 ),
-                         new Vector2(Width-10, 10),
-                         new Vector2(0, 10),
-                         this, Color.Blue
+                         new Vector2(Width, 0 ),
+                         new Vector2(Width, 15),
+                         new Vector2(0, 15),
+                         this, Color.Yellow
                         ),
 
                 new Wall(new Vector2(Width, 0),
                          new Vector2(Width, Height ),
-                         new Vector2(Width -10, Height),
-                         new Vector2(Width-10, 0),
-                         this, Color.Blue
+                         new Vector2(Width-15, Height),
+                         new Vector2(Width-15, 0),
+                         this, Color.Yellow
                         ),
-                new Wall(new Vector2(10, Height-10),
-                         new Vector2(Width -10, Height-10 ),
-                         new Vector2(Width -10, Height),
-                         new Vector2(10, Height),
-                         this, Color.Blue
+                new Wall(new Vector2(0, Height-15),
+                         new Vector2(Width, Height -15 ),
+                         new Vector2(Width, Height),
+                         new Vector2(0, Height),
+                         this, Color.Yellow
                         ),
 
-                new Wall(new Vector2(10, 0),
-                         new Vector2(10, Height ),
+                new Wall(new Vector2(0, 0),
+                         new Vector2(15, 0 ),
+                         new Vector2(15, Height),
                          new Vector2(0, Height),
-                         new Vector2(0, 0),
-                         this, Color.Blue
+                         this, Color.Yellow
+                        ),
+
+                //other walls
+                new Wall(new Vector2(0, 410),
+                         new Vector2(365, 410 ),
+                         new Vector2(365, 430),
+                         new Vector2(0, 430),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(455, 410),
+                         new Vector2(700, 410 ),
+                         new Vector2(700, 430),
+                         new Vector2(455, 430),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(590, 0),
+                         new Vector2(605, 0 ),
+                         new Vector2(605, 430),
+                         new Vector2(590, 430),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(790, 410),
+                         new Vector2(Width, 410 ),
+                         new Vector2(Width, 430),
+                         new Vector2(790, 430),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(825, 605),
+                         new Vector2(Width, 605 ),
+                         new Vector2(Width, 625),
+                         new Vector2(825, 625),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(825, 605),
+                         new Vector2(840, 605 ),
+                         new Vector2(840, 680),
+                         new Vector2(825, 680),
+                         this, Color.Yellow
+                        ),
+                new Wall(new Vector2(825, 790),
+                         new Vector2(840, 790 ),
+                         new Vector2(840, Height),
+                         new Vector2(825, Height),
+                         this, Color.Yellow
                         ),
 
             };
             foreach (Wall wall in Walls)
                 walls.Add(wall);
+
+            //create robot
+            for (int i = 0; i < 3; i++)
+            {
+                Robot v = new Robot(RandomVector2inmap(), this, i.ToString());
+                MovingEntities.Add(v);
+            }
+            //create smart entities
+            for (int i = 0; i < 5; i++)
+            {
+                SmartEntity v = new SmartEntity(RandomVector2inmap(), this, i.ToString());
+                MovingEntities.Add(v);
+            }
         }
 
         // Vertex to recolor last vertex to yellow
@@ -190,8 +235,8 @@ namespace AAI.world
             if (DrawGraph)
             {
                 gameMap.Render(spriteBatch);
+                walls.ForEach(e => e.Render(spriteBatch));
             }
-            walls.ForEach(e => e.Render(spriteBatch));
             MovingEntities.ForEach(e => e.Render(spriteBatch));
             food.Render(spriteBatch, TextureStorage.Textures["Food"]);
             water.Render(spriteBatch, TextureStorage.Textures["Whiskey"]);

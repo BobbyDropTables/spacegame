@@ -46,7 +46,6 @@ namespace AAI.Entity.MovingEntities
                 Heading = Vector2.Normalize(Velocity);
             }
 
-
             if (Velocity.Length() > MaxSpeed)
             {
                 Velocity = Heading * MaxSpeed;

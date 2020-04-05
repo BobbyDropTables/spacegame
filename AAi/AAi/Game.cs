@@ -99,6 +99,7 @@ namespace AAI
 
             // Clear the screen and add a background color.
             spriteBatch.Begin();
+            spriteBatch.Draw(TextureStorage.Textures["Background"], new Rectangle(0, 0, 1280, 960), Color.White);
             // Draw all the Entities.
             world.Render(spriteBatch);
             //draw fps

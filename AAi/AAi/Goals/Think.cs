@@ -50,7 +50,7 @@ namespace AAI.Goals
         {
             _y += 24;
             var font = TextureStorage.Fonts["Font"];
-            spriteBatch.DrawString(font, currentGoal.Name, new Vector2(smartEntity.Pos.X + depth * 6, smartEntity.Pos.Y +_y), currentGoal.State == Statusgoal.active ? Color.Green : Color.Black);
+            spriteBatch.DrawString(font, currentGoal.Name, new Vector2(smartEntity.Pos.X + depth * 6, smartEntity.Pos.Y +_y), currentGoal.State == Statusgoal.active ? Color.LawnGreen : Color.Black);
 
             var compositeGoal = currentGoal as CompositeGoal;
 

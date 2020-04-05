@@ -59,22 +59,22 @@ namespace AAI.Entity.MovingEntities
         {
             thirst += 0.005f;
             hunger += 0.005f;
-            tiredness += 0.0005f;
+            tiredness += 0.001f;
             Think.Process();
             base.Update();
         }
 
         public override void Render(SpriteBatch spriteBatch)
         {
-            Texture = TextureStorage.Textures["Arrow"];
+            Texture = TextureStorage.Textures["Human"];
             Vector2 origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
             spriteBatch.Draw(
                              Texture,
                              new Rectangle(
                                            Pos.ToPoint(),
-                                           Size.ToPoint()),
+                                           (Size * 2).ToPoint()),
                              null,
-                             Color.Aqua,
+                             Color.White,
                              (float)Math.Atan2(Heading.Y, Heading.X),
                              origin,
                              SpriteEffects.None,

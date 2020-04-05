@@ -45,7 +45,6 @@ namespace AAI.Goals
                         State = Statusgoal.completed;
                     }
                 }
-
             return State;
         }
     }
