@@ -20,6 +20,7 @@ namespace AAI.behaviour
             Vector2 DesiredVelocity = Target - ME.Pos;
             DesiredVelocity.Normalize();
             DesiredVelocity *= ME.MaxSpeed;
+            // if distance is less then 2 return zero vector else the DesiredVelocity minus the velocity of the entity 
             result = Vector2.Distance(ME.Pos, Target) <= 2 ? new Vector2(0, 0) : DesiredVelocity - ME.Velocity;
             return result* Force;
         }
