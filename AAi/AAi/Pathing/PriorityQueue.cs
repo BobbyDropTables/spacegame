@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace AAI.Pathing
 {
+    /**
+     * Priority queue implemented as a binary heap.
+     * Fixed sized array used as container.
+     * If the array is full, double its size.
+     */
     class PriorityQueue
     {
         private int CurrentSize;

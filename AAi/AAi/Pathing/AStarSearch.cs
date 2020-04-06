@@ -9,7 +9,11 @@ namespace AAI
 {
     class AStarSearch
     {
-
+        /**
+         * Find the shortest path between two vertices
+         * @return a list of vertices that forms a path
+         * @return null if no path could be found
+         */
         public List<Vertex> Search(Vertex source, Vertex destination)
         {
             PriorityQueue frontier = new PriorityQueue();
