@@ -20,9 +20,9 @@ namespace AAI.FuzzyLogic
             var Hunger_Big = Hunger.AddRightShoulderSet("Hunger_Big", 30, 45, _MAX_HUNGER);
 
             FuzzyVariable Distance = _module.CreateFLV("Distance");
-            var Distance_Close = Distance.AddLeftShoulderSet("Distance_Close", 0, 80, 160);
-            var Distance_Medium = Distance.AddTriangularSet("Distance_Medium", 80, 240, 400);
-            var Distance_Far = Distance.AddRightShoulderSet("Distance_Far", 240, 400, MAX_DISTANCE);
+            var Distance_Close = Distance.AddLeftShoulderSet("Distance_Close", 0, 40, 80);
+            var Distance_Medium = Distance.AddTriangularSet("Distance_Medium", 40, 80, 400);
+            var Distance_Far = Distance.AddRightShoulderSet("Distance_Far", 80, 400, MAX_DISTANCE);
 
             // Consequence
             FuzzyVariable Desirability = _module.CreateFLV("Desirability");
