@@ -40,8 +40,8 @@ namespace AAI.Goals
                     //is it more then 50 continue
                     if (i > 50)
                     {
-                        if (smartEntity.thirst >= 10)
-                            smartEntity.thirst -= 10;
+                        if (smartEntity.thirst >= 25)
+                            smartEntity.thirst -= 25;
                         else
                             smartEntity.thirst = 0;
                         State = Statusgoal.completed;

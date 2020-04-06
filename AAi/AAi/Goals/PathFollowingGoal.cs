@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Timers;
 using AAI.behaviour;
 using AAI.Entity.MovingEntities;
 using AAI.Entity.staticEntities;
+using Microsoft.Xna.Framework;
 
 namespace AAI.Goals
 {
@@ -10,6 +14,7 @@ namespace AAI.Goals
         private          int           i;
         private  PathFollowing PathFollowing;
         private readonly Target        Target;
+        System.Timers.Timer timer;
 
         public PathFollowingGoal(SmartEntity smartEntity, Target target)
         {
@@ -19,8 +24,10 @@ namespace AAI.Goals
             
             Name          = "Pathfollowing";
             Target        = target;
+            timer = new System.Timers.Timer();
+            timer.Elapsed += new ElapsedEventHandler(OutOfTime);
+            timer.Interval = 20000;
         }
-
         public override void Activate()
         {
             State = Statusgoal.active;
@@ -34,6 +41,13 @@ namespace AAI.Goals
                 PathFollowing,
                 new WallAvoidance(smartEntity,15),
             };
+            timer.Enabled = true;
+        }
+
+        private void OutOfTime(object source, ElapsedEventArgs e)
+        {
+            smartEntity.Pos = smartEntity.MyWorld.RandomVector2inmap();
+            Activate();
         }
 
         public override Statusgoal Process()
@@ -42,7 +56,11 @@ namespace AAI.Goals
                 Activate();
             //check if Path is complete
             if (PathFollowing.Finished)
+            {
+                timer.Stop();
                 State = Statusgoal.completed;
+            }
+                
 
             return State;
         }

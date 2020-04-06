@@ -71,6 +71,7 @@ namespace AAI.behaviour
                     target = edge.destination.position;
                     start  = true;
                     Finished = false;
+                    Index++;
                 }
             }
             else

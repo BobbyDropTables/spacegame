@@ -40,8 +40,8 @@ namespace AAI.Goals
                     //is it more then 100 continue
                     if (i > 100)
                     {
-                        if (smartEntity.hunger >= 10)
-                            smartEntity.hunger -= 10;
+                        if (smartEntity.hunger >= 25)
+                            smartEntity.hunger -= 25;
                         else
                             smartEntity.hunger = 0;
                         State = Statusgoal.completed;

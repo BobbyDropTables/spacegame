@@ -40,9 +40,9 @@ namespace AAI.Entity.MovingEntities
 
             NAME = name;
             // random stats
-            hunger    = MyWorld.Random.Next(0, 10);
-            thirst    = MyWorld.Random.Next(0, 10);
-            tiredness = MyWorld.Random.Next(0, 10);
+            hunger    = MyWorld.Random.Next(0, 25);
+            thirst    = MyWorld.Random.Next(0, 25);
+            tiredness = MyWorld.Random.Next(0, 25);
 
             Velocity = new Vector2(0, 0);
             Think = new Think(this);
@@ -76,7 +76,7 @@ namespace AAI.Entity.MovingEntities
             double thirstValue = _fuzzyThirst.CalculateDesirability(thirstDistance, thirst);
 
             double sleepDistance = Math.Abs((MyWorld.bed.Pos.X - Pos.X) + (MyWorld.bed.Pos.Y - Pos.Y));
-            double sleepValue = _fuzzyThirst.CalculateDesirability(sleepDistance, tiredness);
+            double sleepValue = _fuzzySleep.CalculateDesirability(sleepDistance, tiredness);
 
             // Wander if desirability of all values are low
             if (hungerValue < 25 && thirstValue < 25 && sleepValue < 25)
@@ -97,9 +97,9 @@ namespace AAI.Entity.MovingEntities
 
         public override void Update()
         {
-            thirst += 0.005f;
-            hunger += 0.005f;
-            tiredness += 0.001f;
+            thirst += 0.01f;
+            hunger += 0.01f;
+            tiredness += 0.002f;
             Think.Process();
             base.Update();
         }
